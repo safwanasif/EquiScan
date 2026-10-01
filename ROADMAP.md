@@ -29,6 +29,8 @@ Prompt sketches and proposed stacks in the briefs are historical alternatives; t
 
 ## 1. Establish a reproducible foundation
 
+Progress: GitHub repository and setup documentation are in place; proxy migration and initial browser verification are complete. The existing Supabase project was resumed and read-only SQL returned zero public tables and zero auth users. Implement and verify versioned schema before testing saved audits. See [verification](docs/verification.md).
+
 Explain the current request/data flow; initialize version control after checking for an existing remote; add safe environment setup documentation and example; inspect the actual database schema and record migrations; migrate middleware using the installed Next.js documentation. Review dependency security and deployment configuration.
 
 Done when: setup is documented, secrets are excluded, database structure is reproducible, and lint/type/build checks pass.

@@ -49,7 +49,7 @@ npx tsc --noEmit
 npm run build
 ```
 
-The build requires network access for Google Fonts and currently reports the middleware-to-proxy deprecation warning. These checks establish static/build health, not AI accuracy or database isolation. Automated behavioral tests and CI are planned.
+The build requires network access for Google Fonts. Session refresh uses the Next.js 16 `proxy.ts` convention. These checks establish static/build health, not AI accuracy or database isolation. Automated behavioral tests and CI are planned. See the [initial browser verification](docs/verification.md).
 
 ## API
 
@@ -71,7 +71,7 @@ The taxonomy covers male-default cases, missing female symptom presentations, ge
 
 Citations are constrained by a prompt library but are not yet validated in code. Scans silently truncate at 60,000 characters and addenda at 40,000. PDF extraction can merge words; exact-match highlighting can miss passages. These are tracked release blockers.
 
-Source text is sent to Anthropic. Signed-in scans attempt to store source text and results in Supabase. Use non-sensitive educational examples during prototype testing. The existing in-app privacy copy needs correction.
+Source text is sent to Anthropic. Signed-in scans attempt to store source text and results in Supabase. Use non-sensitive educational examples during prototype testing. The landing and login disclosures describe these providers; retention and deletion controls remain unfinished.
 
 ## Current scope and next milestones
 

@@ -145,8 +145,8 @@ export default function Home() {
                 From upload to published correction in under a minute.
               </h2>
               <p className="text-lg text-muted leading-relaxed">
-                Four steps. No account required. No data stored. Built on Claude
-                Sonnet 4.6.
+                Four steps. Text is processed by Anthropic. Signed-in scans are
+                saved to your workspace.
               </p>
             </div>
 

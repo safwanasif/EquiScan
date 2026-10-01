@@ -111,8 +111,9 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-8 text-xs text-muted leading-relaxed">
-                By signing in you agree to use EquiScan responsibly. No data is
-                shared with third parties.
+                Document text is sent to Anthropic for analysis. Signed-in
+                scans are saved in Supabase. Use educational material without
+                patient-identifying information.
               </p>
 
               {process.env.NODE_ENV !== "production" ? (

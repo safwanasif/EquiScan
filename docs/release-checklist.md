@@ -8,6 +8,7 @@ The [v1 roadmap](../ROADMAP.md) defines scope. Check items only when supporting 
 - [x] Verify lint, TypeScript, and production build on October 1, 2026.
 - [x] Preserve prototype in local Git history.
 - [x] Replace starter README and add environment setup documentation.
+- [x] Migrate session refresh to proxy.ts; verify sample analysis and unsigned-in workspace redirect. See [verification notes](verification.md).
 
 ## Before deployment
 
@@ -23,7 +24,7 @@ The [v1 roadmap](../ROADMAP.md) defines scope. Check items only when supporting 
 - [ ] Correct privacy copy and verify retention/deletion behavior.
 - [ ] Verify desktop/mobile, keyboard use, and rendered PDF reports.
 - [ ] Add regression tests and CI.
-- [ ] Review dependency security and migrate deprecated middleware.
+- [ ] Review dependency security.
 
 ## Deployment and portfolio
 

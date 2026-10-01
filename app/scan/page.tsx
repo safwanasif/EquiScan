@@ -26,9 +26,11 @@ export default function ScanPage() {
   const [scanning, setScanning] = useState<boolean>(false);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [analyzedText, setAnalyzedText] = useState<string>("");
+  const [analyzedTitle, setAnalyzedTitle] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [addendum, setAddendum] = useState<Addendum | null>(null);
   const [savedScan, setSavedScan] = useState<SavedScan | null>(null);
+  const [saveMessage, setSaveMessage] = useState<string>("");
 
   const getCurrentSample = (): SampleDoc | undefined => {
     return SAMPLE_DOCS.find((d) => d.id === selectedSample);
@@ -74,8 +76,9 @@ export default function ScanPage() {
     });
 
     if (!response.ok) {
-      const data = await response.json().catch(() => null);
-      console.error("Save scan failed:", data);
+      setSaveMessage(response.status === 401
+        ? "Not saved. Sign in before your next scan to save it to your workspace. You can still download this report."
+        : "Analysis complete, but saving failed. Download your report to keep a copy.");
       return null;
     }
 
@@ -87,6 +90,7 @@ export default function ScanPage() {
     if (!file) return;
 
     setUploading(true);
+    setUploadedText("");
     setError(null);
     setUploadedFileName(file.name);
 
@@ -124,8 +128,10 @@ export default function ScanPage() {
     setError(null);
     setScanResult(null);
     setAnalyzedText("");
+    setAnalyzedTitle(getDocumentTitle());
     setAddendum(null);
     setSavedScan(null);
+    setSaveMessage("");
 
     try {
       const response = await fetch("/api/scan", {
@@ -141,8 +147,14 @@ export default function ScanPage() {
       setScanResult(data);
       setAnalyzedText(text);
 
-      const saved = await saveScanToDatabase(text, data);
-      setSavedScan(saved);
+      setSaveMessage("Saving to workspace...");
+      // Persistence failures must not turn a successful analysis into a scan error.
+      try {
+        const saved = await saveScanToDatabase(text, data);
+        setSavedScan(saved);
+      } catch {
+        setSaveMessage("Analysis complete, but saving failed. Download your report to keep a copy.");
+      }
     } catch (err) {
       console.error(err);
       setError("Scan failed. Check your API key or try again.");
@@ -369,8 +381,8 @@ export default function ScanPage() {
                     Saved to workspace
                   </p>
                 ) : (
-                  <p className="text-xs font-mono tracking-widest uppercase text-rose">
-                    Scan complete, save pending or unavailable
+                  <p role="status" className="text-sm text-muted max-w-xl">
+                    {saveMessage}
                   </p>
                 )}
               </div>
@@ -387,6 +399,7 @@ export default function ScanPage() {
               originalText={analyzedText}
               result={scanResult}
               addendum={addendum}
+              documentTitle={analyzedTitle}
             />
 
             <AddendumPanel
