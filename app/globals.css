@@ -1,0 +1,61 @@
+﻿@import "tailwindcss";
+
+@theme {
+  --color-ink: #0A0A0A;
+  --color-paper: #FAFAF7;
+  --color-paper-shade: #F3F2ED;
+  --color-rose: #9F1239;
+  --color-rose-dim: #881337;
+  --color-rose-soft: #FCE7EC;
+  --color-line: #E5E3DC;
+  --color-muted: #6B6B66;
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+html, body {
+  background: #FAFAF7;
+  color: #0A0A0A;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #9F1239;
+  color: #FAFAF7;
+}
+
+.font-serif {
+  font-family: var(--font-instrument), Georgia, serif;
+}
+
+.section-label {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6B6B66;
+}
+
+.hairline {
+  border-color: #E5E3DC;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.slow-pulse {
+  animation: slowPulse 2s ease-in-out infinite;
+}
+
+@keyframes slowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

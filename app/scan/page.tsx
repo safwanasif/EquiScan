@@ -1,0 +1,403 @@
+"use client";
+
+import React, { useState } from "react";
+import Navbar from "@/components/Navbar";
+import ScanResults from "@/components/ScanResults";
+import AddendumPanel from "@/components/AddendumPanel";
+import { SAMPLE_DOCS, SampleDoc } from "@/data/sampleDocs";
+import { ScanResult, Addendum } from "@/lib/types";
+
+type InputMode = "sample" | "paste" | "upload";
+
+type SavedScan = {
+  workspaceId: string;
+  documentId: string;
+  scanId: string;
+};
+
+export default function ScanPage() {
+  const [inputMode, setInputMode] = useState<InputMode>("sample");
+  const [pastedText, setPastedText] = useState<string>("");
+  const [selectedSample, setSelectedSample] = useState<string>(SAMPLE_DOCS[0].id);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [uploadedText, setUploadedText] = useState<string>("");
+  const [uploadedFileName, setUploadedFileName] = useState<string>("");
+
+  const [scanning, setScanning] = useState<boolean>(false);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [analyzedText, setAnalyzedText] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [addendum, setAddendum] = useState<Addendum | null>(null);
+  const [savedScan, setSavedScan] = useState<SavedScan | null>(null);
+
+  const getCurrentSample = (): SampleDoc | undefined => {
+    return SAMPLE_DOCS.find((d) => d.id === selectedSample);
+  };
+
+  const getCurrentText = (): string => {
+    if (inputMode === "sample") {
+      return getCurrentSample()?.text || "";
+    }
+
+    if (inputMode === "paste") {
+      return pastedText;
+    }
+
+    return uploadedText;
+  };
+
+  const getDocumentTitle = (): string => {
+    if (inputMode === "sample") {
+      return getCurrentSample()?.title || "Sample Document";
+    }
+
+    if (inputMode === "upload") {
+      return uploadedFileName || "Uploaded PDF";
+    }
+
+    return "Pasted Medical Text";
+  };
+
+  const saveScanToDatabase = async (
+    text: string,
+    result: ScanResult
+  ): Promise<SavedScan | null> => {
+    const response = await fetch("/api/save-scan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: getDocumentTitle(),
+        sourceType: inputMode === "upload" ? "pdf" : inputMode,
+        rawText: text,
+        result,
+      }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      console.error("Save scan failed:", data);
+      return null;
+    }
+
+    return response.json();
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+    setUploadedFileName(file.name);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/extract-pdf", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("PDF extraction failed");
+
+      const data = await response.json();
+      setUploadedText(data.text);
+    } catch (err) {
+      console.error(err);
+      setError("Could not read that PDF. Try another file or paste the text.");
+      setUploadedFileName("");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleScan = async () => {
+    const text = getCurrentText();
+
+    if (!text || text.length < 50) {
+      setError("Please provide at least 50 characters of medical text to scan.");
+      return;
+    }
+
+    setScanning(true);
+    setError(null);
+    setScanResult(null);
+    setAnalyzedText("");
+    setAddendum(null);
+    setSavedScan(null);
+
+    try {
+      const response = await fetch("/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) throw new Error("Scan failed");
+
+      const data: ScanResult = await response.json();
+
+      setScanResult(data);
+      setAnalyzedText(text);
+
+      const saved = await saveScanToDatabase(text, data);
+      setSavedScan(saved);
+    } catch (err) {
+      console.error(err);
+      setError("Scan failed. Check your API key or try again.");
+    } finally {
+      setScanning(false);
+    }
+  };
+
+  const handleReset = () => {
+    setScanResult(null);
+    setAnalyzedText("");
+    setError(null);
+    setAddendum(null);
+    setSavedScan(null);
+  };
+
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-screen pb-24">
+        <section className="max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose" />
+            <span className="section-label">Analysis</span>
+          </div>
+
+          <h1 className="font-serif text-4xl lg:text-5xl tracking-tight leading-tight mb-3">
+            {scanResult ? "Analysis complete." : "Begin an analysis."}
+          </h1>
+
+          <p className="text-muted text-lg leading-relaxed max-w-2xl">
+            {scanResult
+              ? "Review the flagged passages and rewrites below. Generate the missing chapter when ready."
+              : "Select a sample document, paste medical text, or upload a PDF."}
+          </p>
+        </section>
+
+        {!scanResult ? (
+          <section className="max-w-6xl mx-auto px-6 lg:px-10">
+            <div className="bg-white border border-line rounded-sm shadow-[0_8px_24px_-12px_rgba(10,10,10,0.08)]">
+              <div className="flex border-b border-line">
+                <button
+                  onClick={() => setInputMode("sample")}
+                  className={`flex-1 px-6 py-4 text-sm font-mono tracking-widest uppercase transition-colors ${
+                    inputMode === "sample"
+                      ? "bg-ink text-paper"
+                      : "text-muted hover:text-ink"
+                  }`}
+                >
+                  Sample
+                </button>
+
+                <button
+                  onClick={() => setInputMode("paste")}
+                  className={`flex-1 px-6 py-4 text-sm font-mono tracking-widest uppercase transition-colors border-l border-line ${
+                    inputMode === "paste"
+                      ? "bg-ink text-paper"
+                      : "text-muted hover:text-ink"
+                  }`}
+                >
+                  Paste
+                </button>
+
+                <button
+                  onClick={() => setInputMode("upload")}
+                  className={`flex-1 px-6 py-4 text-sm font-mono tracking-widest uppercase transition-colors border-l border-line ${
+                    inputMode === "upload"
+                      ? "bg-ink text-paper"
+                      : "text-muted hover:text-ink"
+                  }`}
+                >
+                  Upload PDF
+                </button>
+              </div>
+
+              <div className="p-8">
+                {inputMode === "sample" ? (
+                  <div>
+                    <p className="section-label mb-4">Choose a sample</p>
+
+                    <div className="grid md:grid-cols-3 gap-4 mb-6">
+                      {SAMPLE_DOCS.map((doc: SampleDoc) => {
+                        const isActive = selectedSample === doc.id;
+
+                        return (
+                          <button
+                            key={doc.id}
+                            onClick={() => setSelectedSample(doc.id)}
+                            className={`text-left p-5 border rounded-sm transition-all ${
+                              isActive
+                                ? "border-rose bg-rose-soft/30"
+                                : "border-line hover:border-ink"
+                            }`}
+                          >
+                            <p className="font-mono text-[10px] tracking-widest text-rose uppercase mb-2">
+                              {doc.source}
+                            </p>
+                            <p className="font-serif text-lg text-ink leading-tight mb-2">
+                              {doc.title}
+                            </p>
+                            <p className="text-xs text-muted leading-relaxed">
+                              {doc.excerpt}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="bg-paperShade/50 border border-line rounded-sm p-6">
+                      <p className="section-label mb-3">Preview</p>
+                      <p className="font-serif text-sm text-ink/80 leading-relaxed line-clamp-6 whitespace-pre-wrap">
+                        {getCurrentText().slice(0, 400)}...
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+
+                {inputMode === "paste" ? (
+                  <div>
+                    <p className="section-label mb-4">Paste medical text</p>
+                    <textarea
+                      value={pastedText}
+                      onChange={(e) => setPastedText(e.target.value)}
+                      placeholder="Paste a textbook chapter, research paper excerpt, or curriculum section here..."
+                      className="w-full min-h-70 p-5 border border-line rounded-sm font-serif text-[15px] leading-relaxed bg-paper focus:outline-none focus:border-ink transition-colors resize-none"
+                    />
+                    <p className="text-xs text-muted mt-2 font-mono">
+                      {pastedText.length} characters
+                    </p>
+                  </div>
+                ) : null}
+
+                {inputMode === "upload" ? (
+                  <div>
+                    <p className="section-label mb-4">Upload a PDF</p>
+                    <label className="block border-2 border-dashed border-line rounded-sm p-12 text-center cursor-pointer hover:border-ink transition-colors">
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+
+                      {uploading ? (
+                        <p className="font-mono text-xs tracking-widest text-rose uppercase slow-pulse">
+                          Extracting text
+                        </p>
+                      ) : uploadedFileName ? (
+                        <div>
+                          <p className="font-serif text-xl text-ink mb-1">
+                            {uploadedFileName}
+                          </p>
+                          <p className="text-xs text-muted">
+                            {uploadedText.length} characters extracted. Click to
+                            replace.
+                          </p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="font-serif text-xl text-ink mb-1">
+                            Drop a PDF or click to browse
+                          </p>
+                          <p className="text-xs text-muted">
+                            Max 10 MB. Medical textbook chapters work best.
+                          </p>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                ) : null}
+
+                {error ? (
+                  <p className="mt-4 text-sm text-rose">{error}</p>
+                ) : null}
+
+                <div className="mt-8 pt-6 border-t border-line flex items-center justify-between">
+                  <p className="text-xs text-muted font-mono tracking-widest uppercase">
+                    {getCurrentText().length} chars ready
+                  </p>
+
+                  <button
+                    onClick={handleScan}
+                    disabled={scanning || uploading || getCurrentText().length < 50}
+                    className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3 text-base hover:bg-rose transition-colors rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {scanning ? (
+                      <span className="slow-pulse">Scanning</span>
+                    ) : (
+                      <span>Scan for bias</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {scanning ? (
+              <div className="mt-12 text-center py-16">
+                <p className="section-label mb-6">Analyzing</p>
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <span className="w-2 h-2 bg-rose rounded-full slow-pulse" />
+                  <span
+                    className="w-2 h-2 bg-rose rounded-full slow-pulse"
+                    style={{ animationDelay: "0.2s" }}
+                  />
+                  <span
+                    className="w-2 h-2 bg-rose rounded-full slow-pulse"
+                    style={{ animationDelay: "0.4s" }}
+                  />
+                </div>
+                <p className="font-serif text-2xl text-muted italic">
+                  Reading for patterns of bias.
+                </p>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+
+        {scanResult ? (
+          <section className="max-w-6xl mx-auto px-6 lg:px-10">
+            <div className="mb-6 flex items-center justify-between gap-4">
+              <div>
+                {savedScan ? (
+                  <p className="text-xs font-mono tracking-widest uppercase text-muted">
+                    Saved to workspace
+                  </p>
+                ) : (
+                  <p className="text-xs font-mono tracking-widest uppercase text-rose">
+                    Scan complete, save pending or unavailable
+                  </p>
+                )}
+              </div>
+
+              <button
+                onClick={handleReset}
+                className="text-xs font-mono uppercase tracking-widest py-2 px-4 border border-line hover:border-ink transition-colors rounded-sm"
+              >
+                Scan another
+              </button>
+            </div>
+
+            <ScanResults
+              originalText={analyzedText}
+              result={scanResult}
+              addendum={addendum}
+            />
+
+            <AddendumPanel
+              originalText={analyzedText}
+              scanResult={scanResult}
+              addendum={addendum}
+              setAddendum={setAddendum}
+            />
+          </section>
+        ) : null}
+      </main>
+    </>
+  );
+}
