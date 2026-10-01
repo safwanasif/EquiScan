@@ -39,7 +39,7 @@ Fill in `.env.local`, then run `npm run dev` and open [localhost:3000](http://lo
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public client key, subject to database policies |
 | `SUPABASE_SERVICE_ROLE_KEY` | Existing development-only login helper; never expose to the browser |
 
-Database migrations are not yet in the repository. An empty Supabase project is insufficient for saved audits; schema recovery is the first foundation milestone. AI actions incur provider charges, including analysis of the built-in sample inputs.
+Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions incur provider charges, including analysis of the built-in sample inputs.
 
 ## Verify
 
@@ -75,7 +75,7 @@ Source text is sent to Anthropic. Signed-in scans attempt to store source text a
 
 ## Current scope and next milestones
 
-Scanner, rewrite controls, addendum, PDF export, login UI, save endpoints, and dashboard queries exist. Persisted flag IDs are not connected to review controls, grading differs between dashboard and scanner, and saved audits cannot yet be reopened.
+Scanner, rewrite controls, addendum, PDF export, login UI, and dashboard queries exist. Saving is transactional, persisted flag IDs connect to review controls, and dashboard thresholds match the saved grade calculation. Database role/isolation tests pass; real email login and browser save/review verification remain pending. Saved audits cannot yet be reopened.
 
 V1 completes this workflow before deployment. Later work adds a reviewed benchmark and evidence retrieval. Custom model training depends on a measured comparison; see the [roadmap](ROADMAP.md).
 

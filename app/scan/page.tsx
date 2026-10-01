@@ -13,6 +13,7 @@ type SavedScan = {
   workspaceId: string;
   documentId: string;
   scanId: string;
+  flagIdMap: Record<string, string>;
 };
 
 export default function ScanPage() {
@@ -400,6 +401,7 @@ export default function ScanPage() {
               result={scanResult}
               addendum={addendum}
               documentTitle={analyzedTitle}
+              flagIdMap={savedScan?.flagIdMap}
             />
 
             <AddendumPanel

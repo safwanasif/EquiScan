@@ -48,6 +48,7 @@ export default function ScanResults({
   const [exporting, setExporting] = useState<boolean>(false);
   const [flagStatuses, setFlagStatuses] = useState<StatusMap>({});
   const [updatingFlag, setUpdatingFlag] = useState<string | null>(null);
+  const [reviewError, setReviewError] = useState<string | null>(null);
 
   const gradeStyle = GRADE_COLORS[result.letterGrade] || GRADE_COLORS.F;
 
@@ -56,7 +57,9 @@ export default function ScanResults({
   };
 
   const updateFlagStatus = async (flag: BiasFlag, status: FlagStatus) => {
-    const dbFlagId = flagIdMap[flag.id] || flag.id;
+    const dbFlagId = flagIdMap[flag.id];
+    if (!dbFlagId) return;
+    setReviewError(null);
     setUpdatingFlag(flag.id);
 
     try {
@@ -76,6 +79,7 @@ export default function ScanResults({
       }));
     } catch (err) {
       console.error(err);
+      setReviewError("Could not save your review decision. Please try again.");
     } finally {
       setUpdatingFlag(null);
     }
@@ -314,13 +318,15 @@ export default function ScanResults({
                         <p className="font-mono text-[10px] tracking-widest text-muted uppercase mb-2">
                           Resolution
                         </p>
+                        {!flagIdMap[flag.id] ? <p className="text-xs text-muted mb-3">Save this audit to a workspace before recording review decisions.</p> : null}
+                        {reviewError ? <p role="alert" className="text-xs text-rose mb-3">{reviewError}</p> : null}
 
                         <div className="grid grid-cols-3 gap-2">
                           <button
                             onClick={() =>
                               updateFlagStatus(flag, "accepted")
                             }
-                            disabled={isUpdating}
+                            disabled={isUpdating || !flagIdMap[flag.id]}
                             className="text-[10px] font-mono tracking-widest uppercase py-2 px-2 bg-ink text-paper hover:bg-rose transition-colors rounded-sm disabled:opacity-40"
                           >
                             Accept
@@ -330,7 +336,7 @@ export default function ScanResults({
                             onClick={() =>
                               updateFlagStatus(flag, "resolved")
                             }
-                            disabled={isUpdating}
+                            disabled={isUpdating || !flagIdMap[flag.id]}
                             className="text-[10px] font-mono tracking-widest uppercase py-2 px-2 border border-line hover:border-ink transition-colors rounded-sm disabled:opacity-40"
                           >
                             Resolve
@@ -340,7 +346,7 @@ export default function ScanResults({
                             onClick={() =>
                               updateFlagStatus(flag, "dismissed")
                             }
-                            disabled={isUpdating}
+                            disabled={isUpdating || !flagIdMap[flag.id]}
                             className="text-[10px] font-mono tracking-widest uppercase py-2 px-2 border border-line hover:border-ink transition-colors rounded-sm disabled:opacity-40"
                           >
                             Dismiss

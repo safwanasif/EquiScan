@@ -49,32 +49,8 @@ export async function POST(req: NextRequest) {
       if (createError) throw createError;
       user = newUser.user!;
 
-      // Manually create workspace + membership (the trigger doesn't fire on admin creation)
-      const workspaceName = "University of Arizona College of Medicine";
-      const slug =
-        email.split("@")[0].toLowerCase().replace(/\./g, "-") +
-        "-" +
-        user.id.substring(0, 8);
+      // The auth.users trigger provisions the workspace for admin-created users too.
 
-      const { data: workspace, error: wsError } = await adminClient
-        .from("workspaces")
-        .insert({
-          name: workspaceName,
-          slug,
-          created_by: user.id,
-        })
-        .select()
-        .single();
-      if (wsError) throw wsError;
-
-      const { error: memberError } = await adminClient
-        .from("workspace_members")
-        .insert({
-          workspace_id: workspace.id,
-          user_id: user.id,
-          role: "owner",
-        });
-      if (memberError) throw memberError;
     }
 
     // Generate a magic link, but extract the token instead of sending email

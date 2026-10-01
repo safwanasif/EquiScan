@@ -35,10 +35,10 @@ type FlagRow = {
 
 const scoreToGrade = (score: number | null): string => {
   if (score === null) return "--";
-  if (score <= 2) return "A";
-  if (score <= 4) return "B";
-  if (score <= 6) return "C";
-  if (score <= 8) return "D";
+  if (score < 2) return "A";
+  if (score < 4) return "B";
+  if (score < 6) return "C";
+  if (score < 8) return "D";
   return "F";
 };
 
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
   const documentCount = documents.length;
   const totalFlags = flags.length;
   const resolvedFlags = flags.filter(
-    (flag) => flag.status === "accepted" || flag.status === "resolved"
+    (flag) => flag.status !== "open"
   ).length;
 
   const averageBiasScore =

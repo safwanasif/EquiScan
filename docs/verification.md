@@ -17,6 +17,6 @@ Renamed middleware to proxy using the installed Next.js 16 guide. Added workspac
 
 ## Remaining checks
 
-Supabase project `drctvavraalywvpcpbbc` was paused and was resumed through its dashboard. After recovery, read-only SQL against `postgres` returned zero public tables and zero auth users. The expected workspace/document/scan schema is absent in this project. This establishes current state, not why it differs from the old handoff. No database schema or policy changes have been applied in this batch. Next work must provide versioned schema and provisioning rather than assume the historical RLS patch applies.
+Supabase project `drctvavraalywvpcpbbc` was paused and was resumed through its dashboard. Early SQL checks returned zero tables/users during recovery. **Correction:** the legacy schema subsequently became visible; the earlier conclusion that it was absent was premature. The subsequent data-preserving migration and database tests are recorded in [database verification](database.md).
 
 Real magic-link login, account isolation, saved review/reopen behavior, rendered PDF layout, mobile/keyboard regression coverage, and model correctness remain unverified. One output flagged a pronoun referring to an explicitly identified male case patient; context-sensitive false positives need evaluation before trusting the taxonomy.

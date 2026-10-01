@@ -12,12 +12,12 @@ The [v1 roadmap](../ROADMAP.md) defines scope. Check items only when supporting 
 
 ## Before deployment
 
-- [ ] Recover and version database schema and policies.
+- [x] Inspect restored schema and apply a versioned, data-preserving upgrade; see [database verification](database.md).
 - [ ] Verify real login, workspace provisioning, and two-user isolation.
 - [ ] Validate requests and model outputs; unify grading and counts.
 - [ ] Verify citations and correct unsupported claims.
 - [ ] Fix PDF text boundaries and disclose analyzed coverage.
-- [ ] Make saving atomic and connect persisted flag IDs to review controls.
+- [x] Make saving atomic and connect persisted flag IDs to review controls; database tests pass, browser verification pending.
 - [ ] Reopen and delete saved audits; preserve report content.
 - [ ] Add visible error recovery and a precomputed visitor demo.
 - [ ] Protect paid endpoints with durable quotas and spending safeguards.
