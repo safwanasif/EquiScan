@@ -14,3 +14,7 @@ After the revision:
 Both responses passed runtime validation. These are single calls, not latency benchmarks. The prompt was tuned using these examples, so these results must never be represented as test-set accuracy. Exact input fixtures are in smoke-cases.json. No real patient data was submitted.
 
 Next: expand development cases and collect separately reviewed examples covering other categories, clean passages, ambiguous context and adversarial instructions. Record prompt/model versions and source provenance. Live rewrite/addendum and full browser verification remain pending. Authentication, quotas, evidence validation and uncalibrated grades remain release work.
+
+## Additional negative checks
+
+The inclusive-instructions and insufficient-context fixtures each produced zero findings, as expected, in single live calls (584 ms and 598 ms). These remain development smoke cases. Run selected cases explicitly with `node --env-file=.env.local scripts/evaluate-groq.mjs inclusive-instructions insufficient-context`. The command consumes Groq quota and is not included in automated tests.

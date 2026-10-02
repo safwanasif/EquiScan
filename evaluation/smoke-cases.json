@@ -8,7 +8,21 @@
   {
     "id": "generic-pronoun",
     "source": "Every patient should bring his medication list to the appointment. Ask each patient whether he understands the instructions before he leaves.",
-    "expectedCategories": ["PRONOUN_DEFAULT"],
+    "expectedCategories": [
+      "PRONOUN_DEFAULT"
+    ],
     "rationale": "Instructions apply to all patients but assume male pronouns."
+  },
+  {
+    "id": "inclusive-instructions",
+    "source": "Every patient should bring their medication list to the appointment. Ask each patient whether they understand the instructions before leaving.",
+    "expectedCategories": [],
+    "rationale": "Generic language does not assume a sex."
+  },
+  {
+    "id": "insufficient-context",
+    "source": "This excerpt describes appointment scheduling and the format of the intake form. Additional chapters cover clinical assessment and research methods.",
+    "expectedCategories": [],
+    "rationale": "Missing medical detail in an administrative excerpt does not establish an omission."
   }
 ]

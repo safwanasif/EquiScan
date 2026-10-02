@@ -66,69 +66,22 @@ export default function Home() {
                 <span className="hidden md:inline">-</span>
                 <span>5 bias categories and 3 rewrite modes</span>
                 <span className="hidden md:inline">-</span>
-                <span>Grounded in peer-reviewed research</span>
+                <span>Human review required</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* WHY IT MATTERS - STATS */}
         <section id="problem" className="border-t border-line">
-          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-24 lg:py-32">
-            <div className="mb-20 max-w-3xl">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose" />
-                <span className="section-label">Why It Matters</span>
-              </div>
-              <h2 className="font-serif text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-                A quiet emergency in how medicine is taught.
-              </h2>
-              <p className="text-lg text-muted leading-relaxed">
-                For decades, clinical trials, case studies, and textbook symptom
-                lists centered on male physiology. The consequences are
-                measurable, and they fall on women.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
-              <div className="border-t border-ink pt-8">
-                <p className="font-serif text-7xl lg:text-8xl leading-none tracking-tightest mb-4">
-                  70<span className="text-rose">%</span>
-                </p>
-                <p className="font-mono text-xs tracking-widest text-muted uppercase mb-3">
-                  Studies on men
-                </p>
-                <p className="text-ink/80 leading-relaxed">
-                  Of medical research historically conducted primarily on male
-                  subjects, with findings extrapolated to women.
-                </p>
-              </div>
-
-              <div className="border-t border-ink pt-8">
-                <p className="font-serif text-7xl lg:text-8xl leading-none tracking-tightest mb-4">
-                  50<span className="text-rose">%</span>
-                </p>
-                <p className="font-mono text-xs tracking-widest text-muted uppercase mb-3">
-                  Atypical presentations
-                </p>
-                <p className="text-ink/80 leading-relaxed">
-                  Of women having heart attacks present with symptoms not listed
-                  in traditional medical textbooks.
-                </p>
-              </div>
-
-              <div className="border-t border-ink pt-8">
-                <p className="font-serif text-7xl lg:text-8xl leading-none tracking-tightest mb-4">
-                  2<span className="text-rose">x</span>
-                </p>
-                <p className="font-mono text-xs tracking-widest text-muted uppercase mb-3">
-                  Adverse drug reactions
-                </p>
-                <p className="text-ink/80 leading-relaxed">
-                  Women experience adverse drug reactions at twice the rate of
-                  men, largely due to dosing standards set on male physiology.
-                </p>
-              </div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-24">
+            <p className="section-label mb-6">Designed for human review</p>
+            <h2 className="font-serif text-5xl tracking-tight mb-8">Make assumptions easier to examine.</h2>
+            <div className="grid md:grid-cols-3 gap-10">
+              {[
+                ["Read in context", "A male patient is not automatically a biased example. Review findings against the surrounding passage."],
+                ["Inspect the source", "Each finding quotes the supplied text so you can assess the concern yourself."],
+                ["Keep your judgment", "Suggested edits are drafts. EquiScan is not a clinically validated assessment or a substitute for expert review."],
+              ].map(([title, detail]) => <div key={title} className="border-t border-line pt-6"><h3 className="font-serif text-2xl mb-3">{title}</h3><p className="text-muted leading-relaxed">{detail}</p></div>)}
             </div>
           </div>
         </section>
@@ -142,7 +95,7 @@ export default function Home() {
                 <span className="section-label">How It Works</span>
               </div>
               <h2 className="font-serif text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-                From upload to published correction in under a minute.
+                From source text to a reviewable report.
               </h2>
               <p className="text-lg text-muted leading-relaxed">
                 Four steps. Text is processed by Groq. Signed-in scans are

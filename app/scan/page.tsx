@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { MAX_SCAN_CHARACTERS } from "@/lib/analysis/validate";
 import Navbar from "@/components/Navbar";
 import ScanResults from "@/components/ScanResults";
 import AddendumPanel from "@/components/AddendumPanel";
@@ -120,8 +121,13 @@ export default function ScanPage() {
   const handleScan = async () => {
     const text = getCurrentText();
 
-    if (!text || text.length < 50) {
+    if (!text || text.trim().length < 50) {
       setError("Please provide at least 50 characters of medical text to scan.");
+      return;
+    }
+
+    if (text.length > MAX_SCAN_CHARACTERS) {
+      setError("Use a section of up to 8,000 characters. Your text will not be silently shortened.");
       return;
     }
 
@@ -141,7 +147,10 @@ export default function ScanPage() {
         body: JSON.stringify({ text }),
       });
 
-      if (!response.ok) throw new Error("Scan failed");
+      if (!response.ok) {
+        const failure = await response.json().catch(() => null);
+        throw new Error(failure?.error || "Analysis is unavailable. Please try again later.");
+      }
 
       const data: ScanResult = await response.json();
 
@@ -158,7 +167,7 @@ export default function ScanPage() {
       }
     } catch (err) {
       console.error(err);
-      setError("Scan failed. Check your API key or try again.");
+      setError(err instanceof Error ? err.message : "Could not connect. Please try again later.");
     } finally {
       setScanning(false);
     }
@@ -188,7 +197,7 @@ export default function ScanPage() {
 
           <p className="text-muted text-lg leading-relaxed max-w-2xl">
             {scanResult
-              ? "Review the flagged passages and rewrites below. Generate the missing chapter when ready."
+              ? "Review potential concerns and suggested edits. Findings require human judgment."
               : "Select a sample document, paste medical text, or upload a PDF."}
           </p>
         </section>
@@ -283,7 +292,7 @@ export default function ScanPage() {
                       className="w-full min-h-70 p-5 border border-line rounded-sm font-serif text-[15px] leading-relaxed bg-paper focus:outline-none focus:border-ink transition-colors resize-none"
                     />
                     <p className="text-xs text-muted mt-2 font-mono">
-                      {pastedText.length} characters
+                      {pastedText.length} / {MAX_SCAN_CHARACTERS.toLocaleString("en-US")} characters
                     </p>
                   </div>
                 ) : null}
@@ -316,10 +325,10 @@ export default function ScanPage() {
                       ) : (
                         <div>
                           <p className="font-serif text-xl text-ink mb-1">
-                            Drop a PDF or click to browse
+                            Click to choose a PDF
                           </p>
                           <p className="text-xs text-muted">
-                            Max 10 MB. Medical textbook chapters work best.
+                            Max 10 MB. Analysis supports up to 8,000 extracted characters.
                           </p>
                         </div>
                       )}
@@ -328,7 +337,7 @@ export default function ScanPage() {
                 ) : null}
 
                 {error ? (
-                  <p className="mt-4 text-sm text-rose">{error}</p>
+                  <p role="alert" className="mt-4 text-sm text-rose">{error}</p>
                 ) : null}
 
                 <div className="mt-8 pt-6 border-t border-line flex items-center justify-between">
@@ -338,7 +347,7 @@ export default function ScanPage() {
 
                   <button
                     onClick={handleScan}
-                    disabled={scanning || uploading || getCurrentText().length < 50}
+                    disabled={scanning || uploading || getCurrentText().trim().length < 50}
                     className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3 text-base hover:bg-rose transition-colors rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {scanning ? (

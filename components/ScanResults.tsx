@@ -50,6 +50,8 @@ export default function ScanResults({
   const [updatingFlag, setUpdatingFlag] = useState<string | null>(null);
   const [reviewError, setReviewError] = useState<string | null>(null);
 
+  const [actionError, setActionError] = useState<string | null>(null);
+
   const gradeStyle = GRADE_COLORS[result.letterGrade] || GRADE_COLORS.F;
 
   const getFlagStatus = (flagId: string): FlagStatus => {
@@ -78,7 +80,8 @@ export default function ScanResults({
         [flag.id]: status,
       }));
     } catch (err) {
-      console.error(err);
+      console.error("Action failed");
+      setActionError(err instanceof Error ? err.message : "Action failed. Please try again.");
       setReviewError("Could not save your review decision. Please try again.");
     } finally {
       setUpdatingFlag(null);
@@ -87,6 +90,7 @@ export default function ScanResults({
 
   const handleExport = async () => {
     setExporting(true);
+    setActionError(null);
 
     try {
       const response = await fetch("/api/export-pdf", {
@@ -111,7 +115,8 @@ export default function ScanResults({
 
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error(err);
+      console.error("Action failed");
+      setActionError(err instanceof Error ? err.message : "Action failed. Please try again.");
     } finally {
       setExporting(false);
     }
@@ -123,6 +128,7 @@ export default function ScanResults({
 
     if (willExpand && !rewrites[flag.id]) {
       setLoadingRewrite(flag.id);
+      setActionError(null);
 
       try {
         const response = await fetch("/api/rewrite", {
@@ -135,7 +141,8 @@ export default function ScanResults({
         });
 
         if (!response.ok) {
-          throw new Error("Rewrite failed");
+          const failure = await response.json().catch(() => null);
+          throw new Error(failure?.error || "Rewrite generation failed. Please try again later.");
         }
 
         const data: Rewrites = await response.json();
@@ -146,7 +153,8 @@ export default function ScanResults({
           [flag.id]: "balanced",
         }));
       } catch (err) {
-        console.error(err);
+        console.error("Action failed");
+      setActionError(err instanceof Error ? err.message : "Action failed. Please try again.");
       } finally {
         setLoadingRewrite(null);
       }
@@ -216,11 +224,13 @@ export default function ScanResults({
 
   return (
     <div className="grid lg:grid-cols-3 gap-8">
+      {actionError ? <p role="alert" className="mb-4 text-sm text-rose">{actionError}</p> : null}
+      <p className="mb-4 text-sm text-muted">AI-generated findings may be incorrect. Grades are not clinically validated; no findings does not establish that a document is unbiased.</p>
       <div className="lg:col-span-2">
         <div className="bg-white border border-line rounded-sm p-8 mb-6 shadow-[0_8px_24px_-12px_rgba(10,10,10,0.08)]">
           <div className="flex items-start justify-between gap-6">
             <div>
-              <p className="section-label mb-3">Document Grade</p>
+              <p className="section-label mb-3">Provisional review grade</p>
               <div className="flex items-baseline gap-4">
                 <span
                   className={`font-serif text-7xl leading-none ${gradeStyle.text}`}
