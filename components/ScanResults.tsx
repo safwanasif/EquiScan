@@ -24,6 +24,7 @@ interface Props {
   addendum?: Addendum | null;
   documentTitle?: string;
   flagIdMap?: FlagIdMap;
+  demo?: boolean;
 }
 
 const GRADE_COLORS: { [key: string]: { bg: string; text: string } } = {
@@ -40,6 +41,7 @@ export default function ScanResults({
   addendum,
   documentTitle,
   flagIdMap = {},
+  demo = false,
 }: Props) {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const [rewrites, setRewrites] = useState<RewritesMap>({});
@@ -59,6 +61,10 @@ export default function ScanResults({
   };
 
   const updateFlagStatus = async (flag: BiasFlag, status: FlagStatus) => {
+    if (demo) {
+      setFlagStatuses(prev => ({ ...prev, [flag.id]: status }));
+      return;
+    }
     const dbFlagId = flagIdMap[flag.id];
     if (!dbFlagId) return;
     setReviewError(null);
@@ -89,6 +95,18 @@ export default function ScanResults({
   };
 
   const handleExport = async () => {
+    if (demo) {
+      const blob = new Blob([JSON.stringify({ sample: true, documentTitle, originalText, result, reviewDecisions: flagStatuses }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "equiscan-prepared-sample.json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      return;
+    }
     setExporting(true);
     setActionError(null);
 
@@ -125,6 +143,11 @@ export default function ScanResults({
   const handleExpandFlag = async (flag: BiasFlag) => {
     const willExpand = expandedFlag !== flag.id;
     setExpandedFlag(willExpand ? flag.id : null);
+
+    if (demo) {
+      setRewrites(prev => ({ ...prev, [flag.id]: { conservative: flag.suggestedRewrite, balanced: flag.suggestedRewrite, comprehensive: flag.suggestedRewrite } }));
+      return;
+    }
 
     if (willExpand && !rewrites[flag.id]) {
       setLoadingRewrite(flag.id);
@@ -225,7 +248,7 @@ export default function ScanResults({
   return (
     <div className="grid lg:grid-cols-3 gap-8">
       {actionError ? <p role="alert" className="mb-4 text-sm text-rose">{actionError}</p> : null}
-      <p className="mb-4 text-sm text-muted">AI-generated findings may be incorrect. Grades are not clinically validated; no findings does not establish that a document is unbiased.</p>
+      <p className="mb-4 text-sm text-muted lg:col-span-3">{demo ? "Prepared demonstration. The same example edit is shown in each rewrite mode." : "AI-generated findings may be incorrect."} Grades are not clinically validated; no findings does not establish that a document is unbiased.</p>
       <div className="lg:col-span-2">
         <div className="bg-white border border-line rounded-sm p-8 mb-6 shadow-[0_8px_24px_-12px_rgba(10,10,10,0.08)]">
           <div className="flex items-start justify-between gap-6">
@@ -258,7 +281,7 @@ export default function ScanResults({
                 {exporting ? (
                   <span className="slow-pulse">Generating</span>
                 ) : (
-                  <span>Download Report</span>
+                  <span>{demo ? "Download sample JSON" : "Download Report"}</span>
                 )}
               </button>
             </div>
@@ -328,7 +351,7 @@ export default function ScanResults({
                         <p className="font-mono text-[10px] tracking-widest text-muted uppercase mb-2">
                           Resolution
                         </p>
-                        {!flagIdMap[flag.id] ? <p className="text-xs text-muted mb-3">Save this audit to a workspace before recording review decisions.</p> : null}
+                        {(!demo && !flagIdMap[flag.id]) ? <p className="text-xs text-muted mb-3">Save this audit to a workspace before recording review decisions.</p> : null}
                         {reviewError ? <p role="alert" className="text-xs text-rose mb-3">{reviewError}</p> : null}
 
                         <div className="grid grid-cols-3 gap-2">
@@ -336,7 +359,7 @@ export default function ScanResults({
                             onClick={() =>
                               updateFlagStatus(flag, "accepted")
                             }
-                            disabled={isUpdating || !flagIdMap[flag.id]}
+                            disabled={isUpdating || (!demo && !flagIdMap[flag.id])}
                             className="text-[10px] font-mono tracking-widest uppercase py-2 px-2 bg-ink text-paper hover:bg-rose transition-colors rounded-sm disabled:opacity-40"
                           >
                             Accept
@@ -346,7 +369,7 @@ export default function ScanResults({
                             onClick={() =>
                               updateFlagStatus(flag, "resolved")
                             }
-                            disabled={isUpdating || !flagIdMap[flag.id]}
+                            disabled={isUpdating || (!demo && !flagIdMap[flag.id])}
                             className="text-[10px] font-mono tracking-widest uppercase py-2 px-2 border border-line hover:border-ink transition-colors rounded-sm disabled:opacity-40"
                           >
                             Resolve
@@ -356,7 +379,7 @@ export default function ScanResults({
                             onClick={() =>
                               updateFlagStatus(flag, "dismissed")
                             }
-                            disabled={isUpdating || !flagIdMap[flag.id]}
+                            disabled={isUpdating || (!demo && !flagIdMap[flag.id])}
                             className="text-[10px] font-mono tracking-widest uppercase py-2 px-2 border border-line hover:border-ink transition-colors rounded-sm disabled:opacity-40"
                           >
                             Dismiss
@@ -365,8 +388,7 @@ export default function ScanResults({
 
                         {status !== "open" ? (
                           <p className="text-xs text-muted mt-3">
-                            Marked as {status}. Refresh dashboard to update
-                            workspace metrics.
+                            Marked as {status}. {demo ? "Example decision only; not saved online." : "Refresh dashboard to update workspace metrics."}
                           </p>
                         ) : null}
                       </div>
