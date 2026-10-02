@@ -1,7 +1,8 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { callClaude } from "@/lib/claude";
+import { callGroq, analysisFailure } from "@/lib/groq";
 import { REWRITER_SYSTEM_PROMPT } from "@/lib/prompts";
 import { BiasCategory } from "@/lib/types";
+import { CATEGORIES, validateRewrites } from "@/lib/analysis/validate";
 
 interface RewriteResponse {
   conservative: string;
@@ -11,12 +12,14 @@ interface RewriteResponse {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== "object") return NextResponse.json({ error: "Expected a JSON object" }, { status: 400 });
     const flaggedSentence: string = body.flaggedSentence;
     const category: BiasCategory = body.category;
     const context: string | undefined = body.context;
 
-    if (!flaggedSentence || !category) {
+    if (typeof flaggedSentence !== "string" || !flaggedSentence.trim() || flaggedSentence.length > 2000 || !CATEGORIES.includes(category) ||
+        (context !== undefined && (typeof context !== "string" || context.length > 4000))) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -27,18 +30,14 @@ export async function POST(req: NextRequest) {
       ? `Bias category: ${category}\n\nFlagged sentence:\n"${flaggedSentence}"\n\nSurrounding context:\n${context}`
       : `Bias category: ${category}\n\nFlagged sentence:\n"${flaggedSentence}"`;
 
-    const result = await callClaude<RewriteResponse>(
+    const result = await callGroq<RewriteResponse>(
       REWRITER_SYSTEM_PROMPT,
       userContent,
       1024
     );
 
-    return NextResponse.json(result);
+    return NextResponse.json(validateRewrites(result));
   } catch (error) {
-    console.error("Rewrite route error:", error);
-    return NextResponse.json(
-      { error: "Failed to generate rewrites" },
-      { status: 500 }
-    );
+    return analysisFailure(error);
   }
 }

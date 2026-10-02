@@ -60,7 +60,7 @@ export default function Home() {
           <div className="border-t border-line bg-paperShade/50">
             <div className="max-w-7xl mx-auto px-6 lg:px-10 py-5">
               <div className="flex flex-wrap items-center justify-between gap-6 font-mono text-[11px] tracking-widest text-muted uppercase">
-                <span>Built on Claude Sonnet 4.6</span>
+                <span>Built on Groq</span>
                 <span className="hidden md:inline">-</span>
                 <span>8-second analysis</span>
                 <span className="hidden md:inline">-</span>
@@ -145,7 +145,7 @@ export default function Home() {
                 From upload to published correction in under a minute.
               </h2>
               <p className="text-lg text-muted leading-relaxed">
-                Four steps. Text is processed by Anthropic. Signed-in scans are
+                Four steps. Text is processed by Groq. Signed-in scans are
                 saved to your workspace.
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function Home() {
                   Analyze
                 </p>
                 <h3 className="font-serif text-2xl leading-tight mb-3">
-                  Claude reads for bias.
+                  Review potential bias.
                 </h3>
                 <p className="text-sm text-ink/80 leading-relaxed">
                   Five bias categories, severity scoring, and a letter grade
@@ -202,7 +202,7 @@ export default function Home() {
                   Generate the missing chapter.
                 </h3>
                 <p className="text-sm text-ink/80 leading-relaxed">
-                  Claude drafts the Sex and Gender Considerations section that
+                  The model drafts the Sex and Gender Considerations section that
                   should have been there all along.
                 </p>
               </div>
@@ -327,7 +327,7 @@ export default function Home() {
                 </span>
               </div>
               <p className="font-mono text-[10px] tracking-widest text-muted uppercase">
-                Hack Arizona 2026 - Built with Claude Sonnet 4.6
+                Hack Arizona 2026 - Built with Groq
               </p>
             </div>
           </div>

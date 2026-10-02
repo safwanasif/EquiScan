@@ -12,17 +12,17 @@ See the [v1 roadmap](ROADMAP.md), [release checklist](docs/release-checklist.md)
 flowchart LR
   Visitor[Browser: upload, paste, or sample] --> Web[Next.js UI and API routes]
   Web --> Parser[pdf2json: text extraction]
-  Web --> AI[Anthropic: analysis and draft rewrites]
+  Web --> AI[Groq: analysis and draft rewrites]
   Web --> Auth[Supabase Auth]
   Web --> DB[(Supabase: workspaces and audits)]
   Web --> PDF[React PDF: report export]
 ```
 
-The application uses Next.js 16, React 19, TypeScript, and Tailwind CSS 4. Anthropic requests run on the server using `claude-sonnet-4-6`. This is a prompted foundation-model application; no custom model has been trained. The Anthropic and Supabase service-role keys remain server-side. Database access depends on correctly configured row-level security.
+The application uses Next.js 16, React 19, TypeScript, and Tailwind CSS 4. Groq requests run on the server using the configurable `GROQ_MODEL` (default `openai/gpt-oss-120b`). This is a prompted foundation-model application; no custom model has been trained. The Groq and Supabase service-role keys remain server-side. Database access depends on correctly configured row-level security.
 
 ## Run locally
 
-Requirements: Node.js 20.9 or newer, npm, an Anthropic API key, and a configured Supabase project. Initial checks used Node.js 24.15.0.
+Requirements: Node.js 24 (including the test runner), npm, a Groq API key, and a configured Supabase project. Initial checks used Node.js 24.15.0.
 
 ```powershell
 npm ci
@@ -34,12 +34,14 @@ Fill in `.env.local`, then run `npm run dev` and open [localhost:3000](http://lo
 
 | Variable | Purpose |
 | --- | --- |
-| `ANTHROPIC_API_KEY` | Server-side AI requests |
+| `GROQ_API_KEY` | Server-side Groq requests |
+| `GROQ_MODEL` | Model ID; defaults to `openai/gpt-oss-120b` |
+| `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED` | Enable Google button only after provider setup |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public client key, subject to database policies |
 | `SUPABASE_SERVICE_ROLE_KEY` | Existing development-only login helper; never expose to the browser |
 
-Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions incur provider charges, including analysis of the built-in sample inputs.
+Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions consume provider quota, including the current sample inputs. Stay on the Groq Free plan for free-tier testing; paid plans may incur charges. A precomputed sample is planned.
 
 ## Verify
 
@@ -69,9 +71,9 @@ The existing `/api/dev-login` helper rejects production requests. Paid AI endpoi
 
 The taxonomy covers male-default cases, missing female symptom presentations, generic male pronouns, psychosomatic attribution, and missing sex-disaggregated data. Findings require educator/editor review. Grades are model-generated heuristics, not validated measures of clinical quality. Rewrites and addenda require domain review.
 
-Citations are constrained by a prompt library but are not yet validated in code. Scans silently truncate at 60,000 characters and addenda at 40,000. PDF extraction can merge words; exact-match highlighting can miss passages. These are tracked release blockers.
+Model-generated scan citations are withheld until independently verified evidence is available. Scans and addenda reject input over 8,000 characters rather than silently truncating. PDF extraction can merge words; exact-match highlighting can miss passages. These are tracked release blockers.
 
-Source text is sent to Anthropic. Signed-in scans attempt to store source text and results in Supabase. Use non-sensitive educational examples during prototype testing. The landing and login disclosures describe these providers; retention and deletion controls remain unfinished.
+Source text is sent to Groq. Signed-in scans attempt to store source text and results in Supabase. Use non-sensitive educational examples during prototype testing. The landing and login disclosures describe these providers; retention and deletion controls remain unfinished.
 
 ## Current scope and next milestones
 

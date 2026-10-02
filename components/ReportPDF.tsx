@@ -388,7 +388,7 @@ export default function ReportPDF({
 
         <View style={styles.footer} fixed>
           <Text style={styles.footerText}>
-            EquiScan - Built with Claude Sonnet 4.6
+            EquiScan - Built with Groq
           </Text>
           <Text
             style={styles.footerText}

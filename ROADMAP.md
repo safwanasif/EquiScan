@@ -1,74 +1,78 @@
-# EquiScan: polished v1 roadmap
+# EquiScan: deployment roadmap
 
-Initial repository audit: October 1, 2026.
+Updated October 1, 2026. This is the current plan; it supersedes the earlier provider and browser-only proposals in conversation.
 
-## Direction
+## Product and architecture
 
-Keep the existing Next.js, TypeScript, Anthropic, and Supabase foundation. Ship a focused tool for reviewing potential sex and gender bias in medical educational material, with traceable findings and human review. Do not represent its grades as clinical validation or its rewrites as authoritative medical guidance.
+Build a full-stack educational-text review assistant. Keep the existing Next.js/TypeScript UI, PDF tools and Supabase database. Replace Claude with Groq-hosted inference. Retain human review and avoid claiming clinical validation. Occasional maintenance is acceptable; no service is promised to remain free or unchanged forever.
 
-V1 journey: try a demonstration, sign in, upload or paste a document, review source-linked findings, save and reopen an audit, record review decisions, and export a report.
+Visitors can explore a clearly labeled sample without login. Account users can save and reopen audits. Prefer Google OAuth over relying on the limited built-in email sender. Keep Supabase unless a demonstrated blocker justifies migration. Its tested RLS and atomic-save work remain useful. Guest samples must work when auth/database services are unavailable.
 
-## Research context received
+## 1. Groq foundation — in progress
 
-The supplied `hackathon_research.docx` describes an earlier patient advocacy concept. `equiscan_research_brief.docx` narrows that concept to educational document review and the upload, flag, rewrite, export workflow. Treat both as historical planning material, not current implementation instructions or verified research.
+- [x] Runtime scan validation, exact source quotes, derived counts and consistent grades.
+- [x] Replace Claude calls with configurable Groq inference for scan, rewrite and addendum.
+- [x] Explicit size limits, timeouts, quota errors, incomplete-result rejection; no silent truncation.
+- [ ] Test live Groq calls after a server-only key is configured.
+- [ ] Record latency and token usage on representative inputs; tune request budgets against account limits.
 
-Keep the educator/editor audience, explainable findings, contextual rewrites, and domain-expert review. Patient symptom assessment, diagnosis support, public institution rankings, publisher integrations, and commercial analytics are outside v1.
+Exit: sample requests return validated results; quota/provider failures are understandable; no secrets or document text appear in logs. Mock tests do not verify live model quality.
 
-Before using any research claims publicly, locate primary sources and record the exact population, date, denominator, and limitations. The briefs do not establish their medical statistics, competitor absence, market sizes, regulatory assurances, or processing cost estimates. A particularly important mismatch: the brief's curriculum-related 70% claim is not evidence for the landing page's 70% research-subject claim. Domain-expert involvement is an opportunity for evaluation, not proof that the product is validated.
+## 2. Quality and evidence
 
-Prompt sketches and proposed stacks in the briefs are historical alternatives; they do not supersede the inspected implementation. Do not assume every male case, missing sex breakdown, or mental-health reference constitutes bias without surrounding context and supporting evidence.
+- Create permissioned, reviewed examples including clean text, legitimate male cases, and insufficient context.
+- Define category boundaries and evaluation methodology; separate sources across training/test splits.
+- Measure false positives, missed findings, quote validity and latency.
+- Verify evidence metadata and relevance before restoring citation links.
+- Replace unsupported landing-page statistics, speed promises and claims about publication quality.
+- Explain or remove the uncalibrated bias score; do not imply a clinical metric.
 
-## Baseline verified
+Exit: documented evaluation with limitations and reproducible examples. Synthetic fixtures are not clinical validation.
 
-- ESLint and TypeScript checks pass.
-- Production build passes with network access for Google Fonts. Middleware deprecation warning remains.
-- Source includes scanner, rewrites, addendum, PDF input/output, authentication, scan persistence, dashboard queries, and review actions.
-- No Git repository, SQL migrations, or project tests were found in this folder. README is the starter template.
-- Live authentication, database schema/RLS, AI quality, browser behavior, and rendered PDF layout remain unverified. No paid model calls were made during this audit.
-- The supplied handoff ends at section 6.3; its referenced later sections and SQL patch are absent. Code is newer than the handoff.
+## 3. Complete the full-stack workflow
 
-## 1. Establish a reproducible foundation
+- Configure Google OAuth and production redirects; verify sign-in/out and recovery.
+- Verify upload/paste → scan → save → reopen → review → export → delete in real browser sessions.
+- Add audit detail pages, review progress, source highlighting and category filters.
+- Verify two-user isolation, deletion behavior and workspace selection consistency.
+- Remove the development impersonation helper from the production surface.
 
-Progress: GitHub setup, proxy migration, and initial browser verification are complete. Correction: the early zero-table result occurred during recovery; the legacy schema subsequently became visible. A data-preserving versioned migration is applied, with rollback-only provisioning, atomic-save, and two-user RLS checks passing. Real email login and browser persistence verification remain pending. See [database verification](docs/database.md).
+Exit: complete browser-tested journey with clear saved/unsaved states and no cross-account access.
 
-Explain the current request/data flow; initialize version control after checking for an existing remote; add safe environment setup documentation and example; inspect the actual database schema and record migrations; migrate middleware using the installed Next.js documentation. Review dependency security and deployment configuration.
+## 4. Public demo and operational safeguards
 
-Done when: setup is documented, secrets are excluded, database structure is reproducible, and lint/type/build checks pass.
+- Ship a labeled precomputed sample that makes no AI request and needs no database.
+- Protect live endpoints with durable quotas, bounded inputs/outputs and abuse controls.
+- Show analysis coverage, useful errors and retry guidance; avoid repeated automatic model calls.
+- Record non-sensitive operational metadata and engine versions.
+- Review desktop/mobile accessibility and export layout.
 
-## 2. Make findings trustworthy
+Exit: visitors can explore the product when cloud analysis is unavailable; live usage cannot consume unbounded quota.
 
-Validate requests and model responses at runtime. Reject invalid categories, scores, and citations. Derive counts and grades consistently in application code. Verify citation metadata and relevance; store canonical citations independently of model-generated text. Remove unsupported marketing statistics and timing promises. Make prompts distinguish potential issues from confirmed bias and handle legitimate counterexamples. Disclose analysis coverage instead of silently truncating input at 60,000 characters (40,000 for addenda). Improve PDF text boundaries and source matching.
+## 5. Deploy and verify
 
-Done when: malformed outputs fail safely, reported coverage is accurate, citation links resolve to verified sources, and a small reviewed set includes both problematic and appropriate passages.
+- Select hosting after checking runtime, PDF upload and execution limits.
+- Configure secrets, exact auth redirects and reproducible database migrations.
+- Run production smoke tests for success, invalid files, provider failures, unauthenticated actions and account isolation.
+- Document database recovery, model replacement, backup/export and rollback.
+- Add CI checks and a short monthly/manual pre-application health checklist.
 
-## 3. Complete the saved audit workflow
+Exit: deployed URL supports the complete workflow, sample mode survives unavailable services, and remaining limits are documented.
 
-Verify real login and workspace provisioning. Inspect and test RLS with two users. Make document/scan/flag saving atomic. Return persisted flag IDs and connect review actions to them; validate allowed statuses and confirm an actual row was updated. Add audit detail/reopen and deletion flows. Correct dashboard score thresholds and status totals. Display save, rewrite, export, and review failures to users. Persist the report content needed to reopen it.
+## 6. Portfolio release
 
-Done when: a user can sign in, scan, save, reopen, review, export, and delete an audit; another user cannot access it.
+- Publish architecture, setup, screenshots, short demo recording and measured evaluation results.
+- Make repository visibility/license decisions before sharing; verify secret exclusion.
+- Write resume bullets from implemented functionality and real measurements.
 
-## 4. Polish the product and control operating costs
+Exit: live demo, reviewable repository and accurate resume evidence. Then choose a complementary third project.
 
-Review desktop/mobile layouts and keyboard use in the browser. Improve progress, retry, empty, and failure states. Pass document titles to exports and visually inspect PDF pages. Add a clearly labeled precomputed demo for visitors. Protect paid endpoints with authentication, durable quotas/rate limits, input limits, and a total spending safeguard. Correct privacy copy to describe Anthropic processing and Supabase storage; make retention/deletion clear. Avoid logging source text through model error output.
+## After v1: hybrid ML
 
-Done when: the demonstration is reliable, the main journey works on mobile and desktop, exports are readable, and public usage cannot trigger unlimited model spending.
+Train a small classifier only once reviewed, licensed data supports it. Compare Groq-only analysis against classifier-assisted analysis on held-out documents. Check missed candidates, precision/recall, latency and token savings. Integrate only if useful; no custom-model claim before training and evaluation actually happen.
 
-## 5. Deploy and verify production
+## Current evidence
 
-Choose hosting after verifying current request-size, execution-time, and budget constraints, especially PDF uploads. Configure server-only secrets, production auth redirects, database migrations, and basic monitoring. Run the full workflow on the deployed URL, including unauthorized requests, failed requests, and account isolation.
+Legacy database upgrade and rollback-only two-user RLS tests passed; real browser auth remains pending. Existing analysis contract tests pass. Groq migration is in local development and is not yet deployed or live-verified. See docs/database.md, docs/authentication.md and docs/rebuild.md.
 
-Done when: the public demo and authenticated audit flow work on the live site, with logs and a documented recovery procedure.
-
-## 6. Package for the resume
-
-Replace the starter README with architecture, setup, screenshots, demo, limitations, and evaluation results. Record a short demonstration. Write resume bullets from implemented features and measured results; do not claim a custom-trained model, clinical validation, or invented impact metrics.
-
-Done when: live link, repository, README, demo, and accurate resume bullets are ready to share.
-
-## After v1: evaluated ML improvements
-
-Create a domain-reviewed labeled benchmark, ideally with help from the original domain expert. Measure precision, recall, citation support, latency, and cost on held-out examples. Compare the current LLM approach with a lightweight classifier and retrieval from verified evidence. Add a custom model only if the comparison demonstrates a useful quality, cost, or latency improvement. Defer large-document chunking/OCR and institution-level analytics until the core flow is stable.
-
-## Collaboration cadence
-
-For each step: explain the problem and intended behavior, implement a bounded change, report checks and remaining limitations, and give a short demonstration path. Keep this roadmap updated as evidence changes. Prioritize a complete, credible v1 before expanding scope.
+At each step: explain the change, implement a bounded slice, test it, record limitations, and commit reviewable work.

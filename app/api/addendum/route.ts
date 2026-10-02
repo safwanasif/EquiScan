@@ -1,25 +1,29 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { callClaude } from "@/lib/claude";
+import { callGroq, analysisFailure } from "@/lib/groq";
 import { ADDENDUM_SYSTEM_PROMPT } from "@/lib/prompts";
 import { Addendum, ScanResult } from "@/lib/types";
+import { MAX_SCAN_CHARACTERS, validateAddendum, validateScanResult } from "@/lib/analysis/validate";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== "object") return NextResponse.json({ error: "Expected a JSON object" }, { status: 400 });
     const originalText: string = body.originalText;
-    const scanResult: ScanResult = body.scanResult;
+    let scanResult: ScanResult;
 
-    if (!originalText || !scanResult) {
+    if (typeof originalText !== "string" || originalText.trim().length < 50 || originalText.length > MAX_SCAN_CHARACTERS) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const truncatedText = originalText.slice(0, 40000);
+    try { scanResult = validateScanResult(body.scanResult, originalText); }
+    catch { return NextResponse.json({ error: "Invalid scan result" }, { status: 400 }); }
+    if (JSON.stringify(scanResult).length > 8000) return NextResponse.json({ error: "Too many findings for one addendum. Use a shorter section." }, { status: 413 });
 
     const userContent = `ORIGINAL MEDICAL TEXT:
-${truncatedText}
+${originalText}
 
 BIAS ANALYSIS SUMMARY:
 ${scanResult.summary}
@@ -34,18 +38,14 @@ ${scanResult.flags
 
 Generate the "Sex and Gender Considerations" addendum that should accompany this text.`;
 
-    const result = await callClaude<Addendum>(
+    const result = await callGroq<Addendum>(
       ADDENDUM_SYSTEM_PROMPT,
       userContent,
       2048
     );
 
-    return NextResponse.json(result);
+    return NextResponse.json(validateAddendum(result));
   } catch (error) {
-    console.error("Addendum route error:", error);
-    return NextResponse.json(
-      { error: "Failed to generate addendum" },
-      { status: 500 }
-    );
+    return analysisFailure(error);
   }
 }

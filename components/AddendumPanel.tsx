@@ -61,7 +61,7 @@ export default function AddendumPanel({
             that should have been there.
           </h2>
           <p className="text-paper/70 text-lg leading-relaxed mb-8 max-w-2xl">
-            Claude will write a publication-quality &ldquo;Sex and Gender
+            Generate a draft &ldquo;Sex and Gender
             Considerations&rdquo; addendum in the same clinical register as the
             original, addressing every bias pattern found in the scan.
           </p>
