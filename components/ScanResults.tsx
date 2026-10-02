@@ -25,6 +25,7 @@ interface Props {
   documentTitle?: string;
   flagIdMap?: FlagIdMap;
   demo?: boolean;
+  initialStatuses?: StatusMap;
 }
 
 const GRADE_COLORS: { [key: string]: { bg: string; text: string } } = {
@@ -42,13 +43,14 @@ export default function ScanResults({
   documentTitle,
   flagIdMap = {},
   demo = false,
+  initialStatuses = {},
 }: Props) {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const [rewrites, setRewrites] = useState<RewritesMap>({});
   const [loadingRewrite, setLoadingRewrite] = useState<string | null>(null);
   const [activeRewriteMode, setActiveRewriteMode] = useState<ModeMap>({});
   const [exporting, setExporting] = useState<boolean>(false);
-  const [flagStatuses, setFlagStatuses] = useState<StatusMap>({});
+  const [flagStatuses, setFlagStatuses] = useState<StatusMap>(initialStatuses);
   const [updatingFlag, setUpdatingFlag] = useState<string | null>(null);
   const [reviewError, setReviewError] = useState<string | null>(null);
 

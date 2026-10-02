@@ -24,3 +24,11 @@ Real magic-link login, account isolation, saved review/reopen behavior, rendered
 ## Prepared sample: October 1, 2026
 
 Added /demo with synthetic prepared findings, local-only review decisions, and JSON export. The route skips Supabase session refresh; navigation prefetch is disabled to avoid background auth-dependent navigation requests. Browser verified initial render, expansion, acceptance, and reset on refresh. Download implementation is present but downloaded-file contents have not yet been verified. This does not verify cloud saving or live AI quality.
+
+## Saved audit detail route: October 1, 2026
+
+Added /audits/[id] using signed-in Supabase queries and existing RLS. Dashboard titles link to the latest scan. Source/findings are loaded without another model call and persisted flag statuses initialize review controls. Query failures show a retry page; absent/inaccessible scans use not-found behavior. Dashboard workspace ordering now matches save_audit.
+
+Lint, TypeScript and production build passed. Production HTTP checks: /demo returned 200, malformed audit ID returned 404, and a signed-out valid-format audit URL redirected to /login. Authenticated reopen/update/reload and another-user browser checks remain pending. Original findings are restored; generated addenda/extra rewrite variants are not persisted.
+
+The old development process encountered a stale middleware.ts cache reference. It was stopped; the production build is now served locally with npm run start. Development-cache recovery remains separate from application verification.

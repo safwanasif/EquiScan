@@ -64,7 +64,9 @@ export default async function DashboardPage() {
   const { data: memberships } = await supabase
     .from("workspace_members")
     .select("role, workspace_id, workspaces ( id, name, slug, created_at )")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .order("joined_at", { ascending: true })
+    .order("workspace_id", { ascending: true });
 
   const workspaces: Workspace[] =
     memberships?.map((membership) => {
@@ -231,7 +233,7 @@ export default async function DashboardPage() {
                         {document.source_type} • {formatDate(document.created_at)}
                       </p>
                       <h3 className="font-serif text-2xl tracking-tight mb-2">
-                        {document.title}
+                        {document.scan ? <Link href={`/audits/${document.scan.id}`} className="hover:text-rose underline decoration-line underline-offset-4">{document.title}</Link> : document.title}
                       </h3>
                       <p className="text-sm text-muted">
                         {document.char_count.toLocaleString()} characters audited
