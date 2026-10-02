@@ -1,0 +1,14 @@
+[
+  {
+    "id": "specific-male",
+    "source": "A 52-year-old man attends a routine appointment. He brings his medication list and describes his concerns. The clinician asks about his preferences and explains the next steps.",
+    "expectedCategories": [],
+    "rationale": "Pronouns refer to an explicitly male individual, not a generic patient."
+  },
+  {
+    "id": "generic-pronoun",
+    "source": "Every patient should bring his medication list to the appointment. Ask each patient whether he understands the instructions before he leaves.",
+    "expectedCategories": ["PRONOUN_DEFAULT"],
+    "rationale": "Instructions apply to all patients but assume male pronouns."
+  }
+]
