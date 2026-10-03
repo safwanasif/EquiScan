@@ -82,3 +82,10 @@ Inspected workspace, saved audit, scanner, and prepared demo at a 390 by 844 vie
 Changed PDF Blob URL cleanup from immediate revocation to a 60-second delay so the browser can begin reading it. PDF endpoint smoke check, lint, and production build pass. In-app-browser download events still timed out; an actual saved browser download remains unverified. No export failure message appeared.
 
 Added GitHub Actions for npm ci, lint, and the existing validation/provider-adapter tests on Node 24. It requires no project secrets or live model calls. Remote CI execution is pending.
+
+## October 2: hosting preparation and dependency review
+
+GitHub Checks run 37086978698 succeeded for e79b28a. Updated Next.js and eslint-config-next to 16.3.8 and applied compatible npm audit fixes. npm audit --omit=dev reports zero vulnerabilities. Full audit retains five high findings through braces/micromatch/fast-glob in development lint dependencies; npm recommends an incompatible downgrade, which was not applied. Lint and five tests pass after update.
+
+Vercel's documented 4.5 MB function payload limit prompted a 4,000,000-byte PDF limit checked in client and server. Upload errors now preserve server messages. Added docs/deployment.md covering configuration, callbacks, release checks, and Supabase inactivity recovery. Hosting, public deployment, and second-account browser verification remain pending.
+Production build on Next.js 16.3.8 and HTTP/export smoke checks passed, including rejection of a 4,000,001-byte PDF before parsing.

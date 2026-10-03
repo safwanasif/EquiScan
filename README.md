@@ -63,7 +63,7 @@ The build requires network access for Google Fonts. Session refresh uses the Nex
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| POST | `/api/extract-pdf` | Extract text from a PDF, currently limited to 10 MB |
+| POST | `/api/extract-pdf` | Extract text from a PDF, limited to 4 MB |
 | POST | `/api/scan` | Analyze text across five bias categories |
 | POST | `/api/rewrite` | Generate three rewrite drafts |
 | POST | `/api/addendum` | Draft a sex and gender considerations section |

@@ -33,9 +33,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > 4_000_000) {
       return NextResponse.json(
-        { error: "File must be under 10 MB" },
+        { error: "PDF must be 4 MB or smaller. Use a smaller PDF or paste a short section." },
         { status: 400 }
       );
     }

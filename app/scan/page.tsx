@@ -96,6 +96,13 @@ export default function ScanPage() {
     setError(null);
     setUploadedFileName(file.name);
 
+    if (file.size > 4_000_000) {
+      setError("PDF must be 4 MB or smaller. Use a smaller PDF or paste a short section.");
+      setUploadedFileName("");
+      setUploading(false);
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -105,13 +112,15 @@ export default function ScanPage() {
         body: formData,
       });
 
-      if (!response.ok) throw new Error("PDF extraction failed");
+      if (!response.ok) {
+        const failure = await response.json().catch(() => null);
+        throw new Error(failure?.error || "Could not read that PDF. Try another file or paste the text.");
+      }
 
       const data = await response.json();
       setUploadedText(data.text);
     } catch (err) {
-      console.error(err);
-      setError("Could not read that PDF. Try another file or paste the text.");
+      setError(err instanceof Error ? err.message : "Could not read that PDF. Try another file or paste the text.");
       setUploadedFileName("");
     } finally {
       setUploading(false);
@@ -334,7 +343,7 @@ export default function ScanPage() {
                             Click to choose a PDF
                           </p>
                           <p className="text-xs text-muted">
-                            Max 10 MB. Analysis supports up to 8,000 extracted characters.
+                            Max 4 MB. Analysis supports up to 8,000 extracted characters.
                           </p>
                         </div>
                       )}

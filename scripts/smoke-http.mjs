@@ -15,6 +15,11 @@ const invalidFile = new FormData();
 invalidFile.append('file', new Blob(['not a PDF'], { type: 'text/plain' }), 'invalid.txt');
 const upload = await fetch(new URL('/api/extract-pdf', base), { method: 'POST', body: invalidFile });
 assert.equal(upload.status, 400);
+const oversizedFile = new FormData();
+oversizedFile.append('file', new Blob([new Uint8Array(4_000_001)], { type: 'application/pdf' }), 'oversized.pdf');
+const oversizedUpload = await fetch(new URL('/api/extract-pdf', base), { method: 'POST', body: oversizedFile });
+assert.equal(oversizedUpload.status, 400);
+assert.match((await oversizedUpload.json()).error, /4 MB/);
 const addendum = await fetch(new URL('/api/addendum', base), {
   method: 'POST', headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ originalText: 'A synthetic educational excerpt with enough text for this no-findings contract check.', scanResult: {
