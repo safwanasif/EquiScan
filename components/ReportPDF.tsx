@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "Times-Roman",
     fontSize: 28,
+    lineHeight: 1.3,
     marginBottom: 8,
     letterSpacing: -0.5,
   },
@@ -275,12 +276,14 @@ interface ReportPDFProps {
   result: ScanResult;
   addendum?: Addendum | null;
   documentTitle?: string;
+  reviewDecisions?: Record<string, string>;
 }
 
 export default function ReportPDF({
   result,
   addendum,
   documentTitle,
+  reviewDecisions = {},
 }: ReportPDFProps) {
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -307,7 +310,7 @@ export default function ReportPDF({
 
         <View style={styles.gradeCard}>
           <View style={styles.gradeLeft}>
-            <Text style={styles.gradeLabel}>Document Grade</Text>
+            <Text style={styles.gradeLabel}>Provisional review grade</Text>
             <Text style={styles.gradeLetter}>{result.letterGrade}</Text>
             <Text style={styles.gradeScore}>
               Bias score {result.documentBiasScore}/10
@@ -324,7 +327,9 @@ export default function ReportPDF({
           <Text style={styles.summaryText}>{result.summary}</Text>
         </View>
 
+        <Text style={styles.summaryText}>AI-generated editorial review; not clinically validated. No findings does not establish that a document is unbiased.</Text>
         <Text style={styles.sectionHeader}>Flagged Passages</Text>
+        {result.flags.length === 0 ? <Text style={styles.summaryText}>No candidate passages were flagged in this scan.</Text> : null}
 
         {result.flags.map((flag: BiasFlag) => {
           const categoryDef =
@@ -345,6 +350,7 @@ export default function ReportPDF({
               </Text>
 
               <Text style={styles.flagExplanation}>{flag.explanation}</Text>
+              <Text style={styles.flagSubLabel}>Review decision: {reviewDecisions[flag.id] || "open"}</Text>
 
               <Text style={styles.flagSubLabel}>Suggested Rewrite</Text>
               <Text style={styles.rewriteText}>{flag.suggestedRewrite}</Text>
@@ -366,7 +372,7 @@ export default function ReportPDF({
 
         {addendum ? (
           <View style={styles.addendumBox} wrap>
-            <Text style={styles.addendumLabel}>The Missing Chapter</Text>
+            <Text style={styles.addendumLabel}>Unverified editorial draft</Text>
             <Text style={styles.addendumTitle}>{addendum.title}</Text>
             <Text style={styles.addendumMeta}>
               {addendum.wordCount} words

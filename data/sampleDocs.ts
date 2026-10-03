@@ -10,8 +10,8 @@ export const SAMPLE_DOCS: SampleDoc[] = [
   {
     id: "cardiology",
     title: "Acute Coronary Syndromes",
-    source: "Cardiology Textbook, Chapter 14",
-    excerpt: "A standard clinical presentation and diagnostic workup chapter.",
+    source: "Synthetic example: cardiology",
+    excerpt: "Invented demonstration text with intentional concerns; not clinical guidance.",
     text: `Chapter 14: Acute Coronary Syndromes
 
 14.1 Clinical Presentation
@@ -31,8 +31,8 @@ The recommended adult dose of aspirin in the acute setting is 325 mg chewed imme
   {
     id: "psychiatry",
     title: "Depression in Primary Care",
-    source: "Psychiatry Handbook, Section 3",
-    excerpt: "Screening and management guidelines for major depressive disorder.",
+    source: "Synthetic example: psychiatry",
+    excerpt: "Invented demonstration text with intentional concerns; not clinical guidance.",
     text: `Section 3: Depression in Primary Care
 
 3.1 Screening
@@ -50,8 +50,8 @@ First-line pharmacotherapy is a selective serotonin reuptake inhibitor. The stan
   {
     id: "pharmacology",
     title: "Cardiovascular Pharmacology",
-    source: "Pharmacology Review, Chapter 7",
-    excerpt: "Dosing and pharmacokinetics of common cardiovascular medications.",
+    source: "Synthetic example: pharmacology",
+    excerpt: "Invented demonstration text with intentional concerns; not clinical guidance.",
     text: `Chapter 7: Cardiovascular Pharmacology
 
 7.1 Antihypertensive Agents

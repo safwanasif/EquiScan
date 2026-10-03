@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
 
     try { scanResult = validateScanResult(body.scanResult, originalText); }
     catch { return NextResponse.json({ error: "Invalid scan result" }, { status: 400 }); }
+    if (scanResult.flags.length === 0) return NextResponse.json({ error: "An addendum requires at least one finding to review." }, { status: 400 });
     if (JSON.stringify(scanResult).length > 8000) return NextResponse.json({ error: "Too many findings for one addendum. Use a shorter section." }, { status: 413 });
 
     const userContent = `ORIGINAL MEDICAL TEXT:

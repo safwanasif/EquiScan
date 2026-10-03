@@ -45,6 +45,8 @@ export default function AddendumPanel({
     navigator.clipboard.writeText(fullText);
   };
 
+  if (scanResult.flags.length === 0) return null;
+
   if (!addendum && !loading) {
     return (
       <div className="bg-ink text-paper rounded-sm p-10 mt-12">
@@ -52,24 +54,21 @@ export default function AddendumPanel({
           <div className="flex items-center gap-3 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-rose" />
             <span className="font-mono text-[11px] tracking-widest text-paper/60 uppercase">
-              The Missing Chapter
+              Draft for review
             </span>
           </div>
           <h2 className="font-serif text-4xl lg:text-5xl tracking-tight leading-tight mb-4">
-            Generate the content
-            <br />
-            that should have been there.
+            Draft an editorial addendum.
           </h2>
           <p className="text-paper/70 text-lg leading-relaxed mb-8 max-w-2xl">
-            Generate a draft &ldquo;Sex and Gender
-            Considerations&rdquo; addendum in the same clinical register as the
-            original, addressing every bias pattern found in the scan.
+            Draft a short note addressing the flagged language. Check every claim
+            before use. This draft is not saved with your audit; export it to keep a copy.
           </p>
           <button
             onClick={handleGenerate}
             className="inline-flex items-center gap-3 bg-rose text-paper px-6 py-4 text-base hover:bg-rose-dim transition-colors rounded-sm group"
           >
-            <span>Generate the missing chapter</span>
+            <span>Generate draft addendum</span>
             <span className="transition-transform group-hover:translate-x-1" aria-hidden>
               {"\u2192"}
             </span>
@@ -87,7 +86,7 @@ export default function AddendumPanel({
       <div className="bg-ink text-paper rounded-sm p-10 mt-12">
         <div className="max-w-3xl mx-auto text-center py-12">
           <p className="section-label text-paper/60 mb-6">
-            Writing the missing chapter
+            Preparing a draft for review
           </p>
           <div className="flex items-center justify-center gap-2 mb-6">
             <span className="w-2 h-2 bg-rose rounded-full slow-pulse" />

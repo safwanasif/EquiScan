@@ -21,5 +21,15 @@ export default function DemoPage() {
     <h1 className="font-serif text-4xl mb-5">Explore an example audit.</h1>
     <p className="text-muted max-w-3xl mb-8">This synthetic example contains prepared findings and edits. No live AI analysis runs here. Expand the finding, try a review decision, and download the example as JSON. Decisions last only until you leave or refresh this page; nothing is saved to a workspace.</p>
     <ScanResults originalText={source} result={result} documentTitle="EquiScan prepared sample" demo />
+    <section className="mt-12 border-t border-line pt-8">
+      <h2 className="font-serif text-3xl mb-3">Try your own walkthrough</h2>
+      <p className="text-muted mb-4">Download a synthetic text fixture, then paste its contents into the scanner. These are development examples, not clinical guidance or a validated benchmark. Live scans use AI quota and results may vary.</p>
+      <ul className="space-y-2 text-sm">
+        <li><a className="underline" href="/samples/generic-pronoun.txt" download>Generic pronouns — expected concern</a></li>
+        <li><a className="underline" href="/samples/inclusive-instructions.txt" download>Inclusive instructions — expected no findings</a></li>
+        <li><a className="underline" href="/samples/specific-male.txt" download>Specific male patient — legitimate pronoun use</a></li>
+        <li><a className="underline" href="/samples/insufficient-context.txt" download>Insufficient context — expected abstention</a></li>
+      </ul>
+    </section>
   </main></>;
 }

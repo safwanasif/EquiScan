@@ -1,8 +1,13 @@
 # Authentication setup
 
 Google OAuth is implemented behind `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED=true`.
-It is not yet configured or verified end to end. Keep the flag false until setup
-is complete; restart development or rebuild production after changing it.
+Google is configured in Supabase and enabled locally as of October 1, 2026.
+The production build passes and the login button reaches Google's account chooser
+with the expected Supabase callback and localhost return URL. Account consent,
+session creation, and the authenticated upload/save/reopen/review workflow were
+verified in one real browser session on October 2. A second-user browser check
+and public-production consent configuration remain pending.
+Restart development or rebuild production after changing the flag.
 
 1. Create a Google Auth Platform web client with only basic identity scopes
    (`openid`, email, profile). Configure the consent screen and test audience.

@@ -164,9 +164,9 @@ export default async function DashboardPage() {
                 <span className="section-label">Workspace</span>
               </div>
               <h1 className="font-serif text-5xl lg:text-6xl tracking-tight leading-tight mb-3">
-                {primaryWorkspace.name}
+                Your workspace
               </h1>
-              <p className="text-muted text-lg">Signed in as {user.email}</p>
+              <p className="text-muted text-lg">Your saved audits and review progress, all in one place.</p>
             </div>
             <SignOutButton />
           </div>

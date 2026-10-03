@@ -1,10 +1,12 @@
 # EquiScan
 
-An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages, evidence references, and suggested rewrites. Generate a draft addendum and export a PDF report.
+An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages and suggested rewrites. Save audits, record review decisions, generate a draft addendum, and export a PDF report.
 
-**Status: local prototype being prepared for v1.** Production build, TypeScript, and lint checks passed on October 1, 2026. Live authentication, database isolation, and the complete audit workflow still need verification. There is no verified public deployment yet.
+**Status: local prototype being prepared for v1.** Google-authenticated browser upload, live scan, save, reopen, and review persistence were verified October 2, 2026. Database isolation has separate rollback-only SQL tests. Export download, second-user browser isolation, quotas, deletion, and deployment remain release checks. There is no verified public deployment yet.
 
 See the [v1 roadmap](ROADMAP.md), [release checklist](docs/release-checklist.md), and [demo and engineering guide](docs/portfolio.md).
+
+For a quick walkthrough, open `/demo`: its prepared results require no login, database, or model call. Downloadable synthetic text fixtures are included. Follow the [recruiter demo script](docs/demo-script.md), [sample attribution](docs/attribution.md), and [evaluation notes](evaluation/README.md).
 
 ## Architecture
 
@@ -41,17 +43,21 @@ Fill in `.env.local`, then run `npm run dev` and open [localhost:3000](http://lo
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public client key, subject to database policies |
 | `SUPABASE_SERVICE_ROLE_KEY` | Existing development-only login helper; never expose to the browser |
 
-Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions consume provider quota, including the current sample inputs. Stay on the Groq Free plan for free-tier testing; paid plans may incur charges. A precomputed sample is planned.
+Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions consume provider quota, including the current sample inputs. Stay on the Groq Free plan for free-tier testing; paid plans may incur charges. The /demo prepared sample uses no AI quota.
 
 ## Verify
 
 ```powershell
 npm run lint
+npm test
 npx tsc --noEmit
 npm run build
+# With the local server running; no AI calls or writes:
+node scripts/smoke-http.mjs
+node scripts/smoke-export.mjs
 ```
 
-The build requires network access for Google Fonts. Session refresh uses the Next.js 16 `proxy.ts` convention. These checks establish static/build health, not AI accuracy or database isolation. Automated behavioral tests and CI are planned. See the [initial browser verification](docs/verification.md).
+The build requires network access for Google Fonts. Session refresh uses the Next.js 16 `proxy.ts` convention. These checks establish static/build health, not AI accuracy or database isolation. Analysis/provider contract tests and an HTTP smoke script exist; CI remains planned. See the [initial browser verification](docs/verification.md).
 
 ## API
 
@@ -77,7 +83,7 @@ Source text is sent to Groq. Signed-in scans attempt to store source text and re
 
 ## Current scope and next milestones
 
-Scanner, rewrite controls, addendum, PDF export, login UI, and dashboard queries exist. Saving is transactional, persisted flag IDs connect to review controls, and dashboard thresholds match the saved grade calculation. Database role/isolation tests pass; real email login and browser save/review verification remain pending. Saved audits cannot yet be reopened.
+Scanner, rewrite controls, addendum, PDF export, login UI, and dashboard queries exist. Saving is transactional, persisted flag IDs connect to review controls, and dashboard thresholds match the saved grade calculation. Database role/isolation tests pass; Google login and browser save/reopen/review persistence have been verified in one real session.
 
 V1 completes this workflow before deployment. Later work adds a reviewed benchmark and evidence retrieval. Custom model training depends on a measured comparison; see the [roadmap](ROADMAP.md).
 

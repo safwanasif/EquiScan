@@ -13,7 +13,7 @@ Visitors can explore a clearly labeled sample without login. Account users can s
 - [x] Runtime scan validation, exact source quotes, derived counts and consistent grades.
 - [x] Replace Claude calls with configurable Groq inference for scan, rewrite and addendum.
 - [x] Explicit size limits, timeouts, quota errors, incomplete-result rejection; no silent truncation.
-- [ ] Test live Groq calls after a server-only key is configured.
+- [x] Test live Groq calls after a server-only key is configured (four synthetic development cases; not clinical validation).
 - [ ] Record latency and token usage on representative inputs; tune request budgets against account limits.
 
 Exit: sample requests return validated results; quota/provider failures are understandable; no secrets or document text appear in logs. Mock tests do not verify live model quality.
@@ -73,6 +73,6 @@ Train a small classifier only once reviewed, licensed data supports it. Compare 
 
 ## Current evidence
 
-Legacy database upgrade and rollback-only two-user RLS tests passed; real browser auth remains pending. Existing analysis contract tests pass. Groq migration is in local development and is not yet deployed or live-verified. See docs/database.md, docs/authentication.md and docs/rebuild.md.
+Legacy database upgrade and rollback-only two-user RLS tests passed; real browser auth remains pending. Analysis contract and mocked provider tests pass. Live Groq smoke calls passed on four synthetic development cases after prompt tuning; these are not held-out quality measurements. The prepared demo and saved-audit detail page are implemented locally. Google Cloud project EquiScan (`static-graph-510401-u1`) has been created; OAuth branding and credentials remain pending. Nothing is deployed yet. See docs/verification.md, docs/authentication.md and evaluation/README.md.
 
 At each step: explain the change, implement a bounded slice, test it, record limitations, and commit reviewable work.

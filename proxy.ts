@@ -2,8 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
+  // Supabase can return provider errors to the Site URL before our callback runs.
+  // Keep provider-supplied descriptions out of the UI and use a fixed destination.
+  if (request.nextUrl.pathname === "/" &&
+      (request.nextUrl.searchParams.has("error") || request.nextUrl.searchParams.has("error_code"))) {
+    return NextResponse.redirect(new URL("/login?error=auth_failed", request.url));
+  }
   // The prepared sample must remain available without authentication services.
-  if (request.nextUrl.pathname === "/demo") return NextResponse.next();
+  if (request.nextUrl.pathname === "/demo" || request.nextUrl.pathname.startsWith("/samples/")) return NextResponse.next();
   let response = NextResponse.next({
     request: {
       headers: request.headers,

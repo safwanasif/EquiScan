@@ -10,7 +10,7 @@ export default function LoginForm({ callbackFailed }: { callbackFailed: boolean 
   const [sending, setSending] = useState<boolean>(false);
   const [sent, setSent] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(callbackFailed
-    ? "Sign-in could not be completed. The link may have expired, already been used, or opened in a different browser. Start again here and complete sign-in in this browser."
+    ? "Your sign-in attempt expired or could not be completed. Start again using Google or request a new email link, and finish signing in in this browser."
     : null);
 
   const handleGoogle = async () => {

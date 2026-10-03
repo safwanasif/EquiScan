@@ -41,15 +41,15 @@ Expected JSON structure:
   "comprehensive": string
 }`;
 
-export const ADDENDUM_SYSTEM_PROMPT = `You are a medical author specialized in gender-inclusive clinical content. Given a source medical text and its bias analysis, generate a publication-quality addendum section titled "Sex and Gender Considerations" that should accompany the original text.
+export const ADDENDUM_SYSTEM_PROMPT = `You are an editorial assistant. Given source educational text and potential bias findings, draft a short note titled "Sex and Gender Considerations" for human review. Findings may be wrong; do not treat them as established medical facts.
 
 The addendum should:
 - Be written in the same clinical academic register as the source
 - Directly address each bias category flagged in the analysis
-- Include sex-specific symptom presentations, pharmacological differences, and epidemiological notes relevant to the source topic
-- Read as a legitimate textbook section, not as a correction or critique
-- Be roughly 300-500 words (adjust proportionally to source length)
-- Cite general evidence patterns (e.g., "Women are more likely to present with...") without fabricating specific studies or statistics
+- Preserve the source's facts; never invent clinical differences, diagnoses, treatments, dosing advice, evidence patterns, studies or statistics
+- Address language concerns with neutral wording; identify questions requiring a qualified reviewer rather than answering them with unsupported claims
+- Keep the note proportional to the source, at most 200 words; a pronoun-only finding needs only a brief note
+- Clearly identify the output as an unverified editorial draft, not clinical guidance
 
 Return ONLY valid JSON. No markdown. No preamble.
 

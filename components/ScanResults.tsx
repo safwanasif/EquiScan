@@ -116,7 +116,7 @@ export default function ScanResults({
       const response = await fetch("/api/export-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ result, addendum, documentTitle }),
+        body: JSON.stringify({ result, addendum, documentTitle, originalText, reviewDecisions: Object.fromEntries(result.flags.map(flag => [flag.id, getFlagStatus(flag.id)])) }),
       });
 
       if (!response.ok) {
@@ -142,7 +142,7 @@ export default function ScanResults({
     }
   };
 
-  const handleExpandFlag = async (flag: BiasFlag) => {
+  const handleExpandFlag = (flag: BiasFlag) => {
     const willExpand = expandedFlag !== flag.id;
     setExpandedFlag(willExpand ? flag.id : null);
 
@@ -151,7 +151,10 @@ export default function ScanResults({
       return;
     }
 
-    if (willExpand && !rewrites[flag.id]) {
+  };
+
+  const generateRewrites = async (flag: BiasFlag) => {
+    if (!rewrites[flag.id] && !loadingRewrite) {
       setLoadingRewrite(flag.id);
       setActionError(null);
 
@@ -429,6 +432,13 @@ export default function ScanResults({
                         </div>
                       ) : null}
 
+                      {!flagRewrites ? (
+                        <div>
+                          <p className="section-label mb-2">Suggested edit</p>
+                          <p className="text-sm text-ink leading-relaxed font-serif">{flag.suggestedRewrite}</p>
+                          {!demo ? <button onClick={() => generateRewrites(flag)} disabled={Boolean(loadingRewrite)} className="mt-3 text-sm underline underline-offset-4 disabled:opacity-40">Generate alternative rewrites</button> : null}
+                        </div>
+                      ) : null}
                       {flagRewrites ? (
                         <div>
                           <div className="flex gap-1 mb-3">
