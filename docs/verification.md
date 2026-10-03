@@ -54,3 +54,9 @@ No-findings addenda are rejected before inference and hidden in the UI. Addendum
 PDF endpoint now validates source quotes/result structure/title/addendum/review statuses before rendering. Export includes review decisions and a provisional-grade label. Rendered and inspected a synthetic one-finding accepted report and a zero-findings report; corrected overlapping title/subtitle. Browser download event automation timed out, so a saved browser download is not claimed. Long multi-page reports remain unverified.
 
 Production build, lint and all five contract tests passed. scripts/smoke-http.mjs passed public paths, signed-out workspace redirect, OAuth recovery, invalid upload, no-findings addendum, and malformed export rejection. scripts/smoke-export.mjs returned a valid PDF with accepted status, then visual inspection confirmed its layout. These scripts make no model calls or database writes.
+
+## October 2: finding filters and reversible review
+
+Added category/status filters and reviewed-count progress to live and prepared results. Filters affect only the visible list; PDF export includes all findings. Added Reopen finding to reverse a review decision through the existing authenticated status endpoint.
+
+Browser verified Open filter hides the accepted synthetic finding with an empty-state message, All statuses restores it, and Reopen finding persists after reload with 0 of 1 reviewed. The synthetic audit is now open. Build and lint passed.

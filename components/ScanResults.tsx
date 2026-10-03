@@ -53,6 +53,8 @@ export default function ScanResults({
   const [flagStatuses, setFlagStatuses] = useState<StatusMap>(initialStatuses);
   const [updatingFlag, setUpdatingFlag] = useState<string | null>(null);
   const [reviewError, setReviewError] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<BiasCategory | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<FlagStatus | "all">("all");
 
   const [actionError, setActionError] = useState<string | null>(null);
 
@@ -61,6 +63,10 @@ export default function ScanResults({
   const getFlagStatus = (flagId: string): FlagStatus => {
     return flagStatuses[flagId] || "open";
   };
+  const reviewedCount = result.flags.filter(flag => getFlagStatus(flag.id) !== "open").length;
+  const visibleFlags = result.flags.filter(flag =>
+    (categoryFilter === "all" || flag.category === categoryFilter) &&
+    (statusFilter === "all" || getFlagStatus(flag.id) === statusFilter));
 
   const updateFlagStatus = async (flag: BiasFlag, status: FlagStatus) => {
     if (demo) {
@@ -252,7 +258,7 @@ export default function ScanResults({
 
   return (
     <div className="grid lg:grid-cols-3 gap-8">
-      {actionError ? <p role="alert" className="mb-4 text-sm text-rose">{actionError}</p> : null}
+      {actionError ? <p role="alert" className="mb-4 text-sm text-rose lg:col-span-3">{actionError}</p> : null}
       <p className="mb-4 text-sm text-muted lg:col-span-3">{demo ? "Prepared demonstration. The same example edit is shown in each rewrite mode." : "AI-generated findings may be incorrect."} Grades are not clinically validated; no findings does not establish that a document is unbiased.</p>
       <div className="lg:col-span-2">
         <div className="bg-white border border-line rounded-sm p-8 mb-6 shadow-[0_8px_24px_-12px_rgba(10,10,10,0.08)]">
@@ -307,10 +313,27 @@ export default function ScanResults({
 
       <div className="space-y-4">
         <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-1">
-          <p className="section-label mb-4">Flags {result.flags.length}</p>
+          <p className="section-label mb-2">Flags {result.flags.length}</p>
+          <p role="status" className="text-sm text-muted mb-3">{reviewedCount} of {result.flags.length} reviewed</p>
+          {result.flags.length > 0 ? <div className="bg-white border border-line rounded-sm p-3 mb-4 space-y-3">
+            <label className="block text-sm">Category
+              <select value={categoryFilter} onChange={event => setCategoryFilter(event.target.value as BiasCategory | "all")} className="block w-full border border-line p-2 mt-1 bg-white rounded-sm">
+                <option value="all">All categories</option>
+                {Object.values(BIAS_CATEGORIES).filter(category => result.flags.some(flag => flag.category === category.id)).map(category => <option key={category.id} value={category.id}>{category.shortLabel}</option>)}
+              </select>
+            </label>
+            <label className="block text-sm">Review status
+              <select value={statusFilter} onChange={event => setStatusFilter(event.target.value as FlagStatus | "all")} className="block w-full border border-line p-2 mt-1 bg-white rounded-sm">
+                <option value="all">All statuses</option>
+                {(["open", "accepted", "resolved", "dismissed"] as FlagStatus[]).map(status => <option key={status} value={status}>{status[0].toUpperCase() + status.slice(1)}</option>)}
+              </select>
+            </label>
+            <p className="text-xs text-muted">Showing {visibleFlags.length} of {result.flags.length}. Filters affect this list; reports include all findings.</p>
+          </div> : null}
+          {result.flags.length > 0 && visibleFlags.length === 0 ? <p className="text-sm text-muted py-4">No findings match these filters.</p> : null}
 
           <div className="space-y-3">
-            {result.flags.map((flag: BiasFlag) => {
+            {visibleFlags.map((flag: BiasFlag) => {
               const categoryDef = BIAS_CATEGORIES[flag.category as BiasCategory];
               const isExpanded = expandedFlag === flag.id;
               const isLoading = loadingRewrite === flag.id;
@@ -392,9 +415,9 @@ export default function ScanResults({
                         </div>
 
                         {status !== "open" ? (
-                          <p className="text-xs text-muted mt-3">
+                          <div className="mt-3"><p className="text-xs text-muted">
                             Marked as {status}. {demo ? "Example decision only; not saved online." : "Refresh dashboard to update workspace metrics."}
-                          </p>
+                          </p><button onClick={() => updateFlagStatus(flag, "open")} disabled={isUpdating || (!demo && !flagIdMap[flag.id])} className="text-xs underline underline-offset-4 mt-2 disabled:opacity-40">Reopen finding</button></div>
                         ) : null}
                       </div>
 
