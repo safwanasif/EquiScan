@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ScanResults from "@/components/ScanResults";
 import AuditTrashButton from "@/components/AuditTrashButton";
+import AuditTitleEditor from "@/components/AuditTitleEditor";
 import { createClient } from "@/lib/supabase/server";
 import { validateScanResult } from "@/lib/analysis/validate";
 
@@ -47,7 +48,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     <Link href="/dashboard" className="text-sm text-rose">← Back to workspace</Link>
     <p className="section-label mt-8 mb-3">Saved audit</p>
     <h1 className="font-serif text-4xl mb-4 break-words">{document.title}</h1>
-    <div className="mb-5"><AuditTrashButton documentId={scan.document_id} /></div>
+    <div className="mb-5 flex flex-wrap gap-5"><AuditTitleEditor documentId={scan.document_id} title={document.title} /><AuditTrashButton documentId={scan.document_id} /></div>
     <p className="text-muted mb-8">Original findings and saved review decisions. Reopening does not run a new analysis. Additional rewrites are generated on demand and are not saved with this audit.</p>
     <ScanResults key={id} originalText={document.raw_text} result={result} documentTitle={document.title}
       flagIdMap={flagIdMap} initialStatuses={initialStatuses} />

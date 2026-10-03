@@ -36,15 +36,6 @@ type FlagRow = {
   document_id: string;
 };
 
-const scoreToGrade = (score: number | null): string => {
-  if (score === null) return "--";
-  if (score < 2) return "A";
-  if (score < 4) return "B";
-  if (score < 6) return "C";
-  if (score < 8) return "D";
-  return "F";
-};
-
 const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString("en-US", {
     month: "short",
@@ -149,17 +140,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   const documentCount = documents.length;
   const totalFlags = flags.length;
-  const resolvedFlags = flags.filter(
+  const reviewedFlags = flags.filter(
     (flag) => flag.status !== "open"
   ).length;
 
-  const averageBiasScore =
-    scans.length > 0
-      ? scans.reduce((sum, scan) => sum + Number(scan.bias_score), 0) /
-        scans.length
-      : null;
-
-  const curriculumGrade = scoreToGrade(averageBiasScore);
+  const reviewPercent = totalFlags > 0 ? Math.round(reviewedFlags / totalFlags * 100) : null;
 
   return (
     <>
@@ -192,21 +177,20 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </div>
 
             <div className="bg-white border border-line rounded-sm p-6">
-              <p className="section-label mb-3">Workspace Grade</p>
+              <p className="section-label mb-3">Review progress</p>
               <p className="font-serif text-5xl leading-none text-rose">
-                {curriculumGrade}
+                {reviewPercent === null ? "—" : `${reviewPercent}%`}
               </p>
               <p className="text-xs text-muted mt-2">
-                {averageBiasScore === null
-                  ? "Awaiting first scan"
-                  : `Average bias score ${averageBiasScore.toFixed(1)}/10`}
+                {totalFlags === 0 ? "No findings to review" : `${reviewedFlags} of ${totalFlags} findings reviewed`}
               </p>
+              <p className="text-xs text-muted mt-2">Accepted, resolved, or dismissed. Measures review decisions, not document quality.</p>
             </div>
 
             <div className="bg-white border border-line rounded-sm p-6">
               <p className="section-label mb-3">Open Flags</p>
               <p className="font-serif text-5xl leading-none">
-                {totalFlags - resolvedFlags}
+                {totalFlags - reviewedFlags}
               </p>
               <p className="text-xs text-muted mt-2">
                 {totalFlags} total flags detected

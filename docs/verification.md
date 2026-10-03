@@ -99,3 +99,9 @@ Browser uploaded the two-page NHLBI fixture: page 1 prepared 466 characters; pag
 Workspace title search verified nhlbi matches only the saved PDF, an unmatched query shows a clear empty state, and workspace totals remain unchanged. Lint, five existing tests, production build, and HTTP smoke checks pass.
 
 Next v1 features: persist editorial drafts and rename audits, then finish accessibility/export/account-isolation checks and deploy. Draft persistence and renaming require a narrowly scoped database migration and are not yet implemented.
+
+## October 2: review progress and audit renaming
+
+Replaced the workspace average concern score and letter grade with review progress. Accepted, resolved, and dismissed findings count as reviewed; open findings do not. Empty findings show no findings to review. This measures recorded decisions, not document quality or improvement. Browser verified current workspace shows 0 of 1 reviewed and one open finding.
+
+Approved migration 202610020003 applied successfully. Rollback-only SQL test 004 passed: creator rename, title trimming, immutable source, invalid titles, and denial for trashed and cross-user documents. Browser renamed the existing synthetic audit to Synthetic pronoun review and confirmed persistence after reload. Build and lint passed before application. Saved editorial drafts remain the next feature.
