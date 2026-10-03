@@ -2,7 +2,7 @@
 
 An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages and suggested rewrites. Save audits, record review decisions, generate a draft addendum, and export a PDF report.
 
-**Status: local prototype being prepared for v1.** Google-authenticated browser upload, live scan, save, reopen, and review persistence were verified October 2, 2026. Database isolation has separate rollback-only SQL tests. Export download, second-user browser isolation, quotas, deletion, and deployment remain release checks. There is no verified public deployment yet.
+**Status: local prototype being prepared for v1.** Google-authenticated browser upload, live scan, save, reopen, and review persistence were verified October 2, 2026. Database isolation has separate rollback-only SQL tests. Durable quotas and recoverable Trash have been verified. Browser export download, second-user browser isolation, and deployment remain release checks. There is no verified public deployment yet.
 
 See the [v1 roadmap](ROADMAP.md), [release checklist](docs/release-checklist.md), and [demo and engineering guide](docs/portfolio.md).
 
@@ -41,7 +41,7 @@ Fill in `.env.local`, then run `npm run dev` and open [localhost:3000](http://lo
 | `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED` | Enable Google button only after provider setup |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public client key, subject to database policies |
-| `SUPABASE_SERVICE_ROLE_KEY` | Existing development-only login helper; never expose to the browser |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only AI quota reservations; never expose to the browser |
 
 Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions consume provider quota, including the current sample inputs. Stay on the Groq Free plan for free-tier testing; paid plans may incur charges. The /demo prepared sample uses no AI quota.
 
@@ -71,7 +71,7 @@ The build requires network access for Google Fonts. Session refresh uses the Nex
 | POST | `/api/save-scan` | Save document, scan, and flags for a signed-in user |
 | POST | `/api/update-flag` | Update a saved flag's review status |
 
-The existing `/api/dev-login` helper rejects production requests. Paid AI endpoints currently lack authentication and usage limits; unrestricted public deployment is not ready.
+The development login shortcut has been removed. Live AI routes require sign-in and database-backed reservations after migration `202610020002_ai_usage.sql` is applied. They fail closed when the usage service is unavailable. Deployment remains pending.
 
 ## Analysis scope and limitations
 

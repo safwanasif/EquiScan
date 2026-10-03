@@ -272,7 +272,7 @@ export default function ScanResults({
                   {result.letterGrade}
                 </span>
                 <span className="font-mono text-sm text-muted">
-                  BIAS SCORE {result.documentBiasScore}/10
+                  AI CONCERN SCORE {result.documentBiasScore}/10
                 </span>
               </div>
             </div>
@@ -298,6 +298,13 @@ export default function ScanResults({
             </div>
           </div>
 
+          <p className="text-sm text-muted mt-5">
+            Lower means fewer estimated sex or gender bias concerns. This is an
+            uncalibrated AI estimate, not a percentage or a medical accuracy rating.
+            A zero means no supported concerns were identified in this excerpt;
+            review the individual findings rather than relying on the number alone.
+            Reviewing a finding does not recalculate this original scan score.
+          </p>
           <p className="text-ink/80 leading-relaxed mt-6 pt-6 border-t border-line">
             {result.summary}
           </p>

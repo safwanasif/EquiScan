@@ -28,12 +28,14 @@ export default function AddendumPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ originalText, scanResult }),
       });
-      if (!response.ok) throw new Error("Addendum generation failed");
+      if (!response.ok) {
+        const failure = await response.json().catch(() => null);
+        throw new Error(failure?.error || "Could not generate addendum. Try again.");
+      }
       const data: Addendum = await response.json();
       setAddendum(data);
     } catch (err) {
-      console.error(err);
-      setError("Could not generate addendum. Try again.");
+      setError(err instanceof Error ? err.message : "Could not generate addendum. Try again.");
     } finally {
       setLoading(false);
     }

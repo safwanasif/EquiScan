@@ -147,38 +147,6 @@ export default function LoginForm({ callbackFailed }: { callbackFailed: boolean 
                 scans are saved in Supabase. Use educational material without
                 patient-identifying information.
               </p>
-
-              {process.env.NODE_ENV !== "production" ? (
-                <div className="mt-8 pt-6 border-t border-line">
-                  <p className="font-mono text-[10px] tracking-widest text-muted uppercase mb-3">
-                    Dev only
-                  </p>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (!email) return;
-                      setSending(true);
-                      setError(null);
-                      const res = await fetch("/api/dev-login", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ email }),
-                      });
-                      if (res.ok) {
-                        window.location.href = "/dashboard";
-                      } else {
-                        const data = await res.json();
-                        setError(data.error || "Dev login failed");
-                        setSending(false);
-                      }
-                    }}
-                    disabled={sending || !email}
-                    className="w-full bg-paper text-ink border border-line px-6 py-3 text-sm hover:border-ink hover:bg-paperShade transition-colors rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    Dev: instant sign in (no email)
-                  </button>
-                </div>
-              ) : null}
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { callGroq, analysisFailure } from "@/lib/groq";
 import { REWRITER_SYSTEM_PROMPT } from "@/lib/prompts";
 import { BiasCategory } from "@/lib/types";
 import { CATEGORIES, validateRewrites } from "@/lib/analysis/validate";
+import { reserveAiRequest } from "@/lib/server/ai-usage";
 
 interface RewriteResponse {
   conservative: string;
@@ -30,6 +31,8 @@ export async function POST(req: NextRequest) {
       ? `Bias category: ${category}\n\nFlagged sentence:\n"${flaggedSentence}"\n\nSurrounding context:\n${context}`
       : `Bias category: ${category}\n\nFlagged sentence:\n"${flaggedSentence}"`;
 
+    const limited = await reserveAiRequest();
+    if (limited) return limited;
     const result = await callGroq<RewriteResponse>(
       REWRITER_SYSTEM_PROMPT,
       userContent,

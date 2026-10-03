@@ -2,6 +2,7 @@
 import { callGroq, analysisFailure } from "@/lib/groq";
 import { SCANNER_SYSTEM_PROMPT } from "@/lib/prompts";
 import { MAX_SCAN_CHARACTERS, validateScanResult } from "@/lib/analysis/validate";
+import { reserveAiRequest } from "@/lib/server/ai-usage";
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,6 +33,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const limited = await reserveAiRequest();
+    if (limited) return limited;
     const result = await callGroq<unknown>(
       SCANNER_SYSTEM_PROMPT,
       `Analyze the following medical text for potential gender bias:\n\n${text}`,

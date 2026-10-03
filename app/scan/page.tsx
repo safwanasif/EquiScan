@@ -241,6 +241,12 @@ export default function ScanPage() {
               </div>
 
               <div className="p-8">
+                <p className="text-sm text-muted mb-6">
+                  Live AI requires sign-in. Scans, alternative rewrites, and addenda share
+                  an allowance of 8 requests per user daily, with 20 daily across the app
+                  and one request per calendar minute. Daily limits reset at midnight UTC.
+                  {" "}<a href="/demo" className="underline">Explore the prepared demo without login.</a>
+                </p>
                 {inputMode === "sample" ? (
                   <div>
                     <p className="section-label mb-4">Choose a sample</p>

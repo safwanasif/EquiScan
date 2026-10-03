@@ -66,3 +66,11 @@ Browser verified Open filter hides the accepted synthetic finding with an empty-
 Added POST /api/audit-trash, in-app confirmation, Trash view, and restoration. Active workspace metrics omit trashed documents and their scans/flags. Detail URLs show a restore view for trashed audits. Database errors now show a workspace retry screen rather than an empty dashboard.
 
 Approved migration 202610020001 applied successfully. Rollback-only database test 002 passed (see database.md). Browser moved the synthetic Pasted Medical Text audit to Trash, verified active document count changed 2 to 1 and open flags 1 to 0, then restored it from Workspace. Counts returned to 2 documents and 1 open flag. No original data was permanently deleted. Lint and production build passed.
+
+## October 2: durable AI allowances
+
+Applied migration 202610020002 and passed rollback-only SQL test 003: server-only function permission, counter reservations, minute/global/user caps, uncharged denials, and unknown-user rejection. The tests leave existing counters and data unchanged. Multi-connection concurrency testing remains pending.
+
+Removed the development instant-login endpoint and button. Production HTTP smoke checks pass for valid unsigned scan/rewrite/addendum requests returning 401 and the removed endpoint returning 404, in addition to existing checks. Production build and lint pass. Signed-in workspace reload still shows both saved audits.
+
+Result UI now calls the score an AI concern score and explains its uncalibrated nature, lower-is-fewer direction, excerpt scope, and independence from review decisions.

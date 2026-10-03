@@ -3,6 +3,7 @@ import { callGroq, analysisFailure } from "@/lib/groq";
 import { ADDENDUM_SYSTEM_PROMPT } from "@/lib/prompts";
 import { Addendum, ScanResult } from "@/lib/types";
 import { MAX_SCAN_CHARACTERS, validateAddendum, validateScanResult } from "@/lib/analysis/validate";
+import { reserveAiRequest } from "@/lib/server/ai-usage";
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,6 +40,8 @@ ${scanResult.flags
 
 Generate the "Sex and Gender Considerations" addendum that should accompany this text.`;
 
+    const limited = await reserveAiRequest();
+    if (limited) return limited;
     const result = await callGroq<Addendum>(
       ADDENDUM_SYSTEM_PROMPT,
       userContent,

@@ -28,4 +28,24 @@ const invalidReport = await fetch(new URL('/api/export-pdf', base), {
   body: JSON.stringify({ result: { flags: 'invalid' } }),
 });
 assert.equal(invalidReport.status, 400);
-console.log('Passed: public demo, sample download, login, protected workspace, OAuth recovery, invalid upload, no-findings addendum.');
+const source = 'Every patient should discuss his concerns with the clinician before treatment.';
+const liveRequests = [
+  ['/api/scan', { text: source }],
+  ['/api/rewrite', { flaggedSentence: source, category: 'PRONOUN_DEFAULT' }],
+  ['/api/addendum', { originalText: source, scanResult: {
+    documentBiasScore: 2, summary: 'Generic male pronoun.', flags: [{
+      flaggedSentence: source, category: 'PRONOUN_DEFAULT', severity: 1,
+      explanation: 'Generic patient assumes male pronouns.', suggestedRewrite: 'Every patient should discuss their concerns with the clinician before treatment.',
+    }],
+  } }],
+];
+for (const [path, body] of liveRequests) {
+  const response = await fetch(new URL(path, base), {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  assert.equal(response.status, 401, path);
+  assert.match((await response.json()).error, /Sign in/);
+}
+const removedLogin = await fetch(new URL('/api/dev-login', base), { method: 'POST' });
+assert.equal(removedLogin.status, 404);
+console.log('Passed: public pages, protected workspace, OAuth recovery, invalid inputs, unsigned AI routes, removed development login.');
