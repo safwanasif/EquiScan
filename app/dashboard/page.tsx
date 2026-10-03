@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import Navbar from "@/components/Navbar";
 import SignOutButton from "@/components/SignOutButton";
+import AuditTrashButton from "@/components/AuditTrashButton";
 
 type Workspace = {
   id: string;
@@ -18,6 +19,7 @@ type DocumentRow = {
   source_type: string;
   char_count: number;
   created_at: string;
+  deleted_at: string | null;
 };
 
 type ScanRow = {
@@ -31,6 +33,7 @@ type ScanRow = {
 
 type FlagRow = {
   status: string;
+  document_id: string;
 };
 
 const scoreToGrade = (score: number | null): string => {
@@ -104,26 +107,30 @@ export default async function DashboardPage() {
     );
   }
 
-  const { data: documentsData } = await supabase
+  const { data: documentsData, error: documentsError } = await supabase
     .from("documents")
-    .select("id, title, source_type, char_count, created_at")
+    .select("id, title, source_type, char_count, created_at, deleted_at")
     .eq("workspace_id", primaryWorkspace.id)
     .order("created_at", { ascending: false });
 
-  const { data: scansData } = await supabase
+  const { data: scansData, error: scansError } = await supabase
     .from("scans")
     .select("id, document_id, letter_grade, bias_score, total_flags, created_at")
     .eq("workspace_id", primaryWorkspace.id)
     .order("created_at", { ascending: false });
 
-  const { data: flagsData } = await supabase
+  const { data: flagsData, error: flagsError } = await supabase
     .from("flags")
-    .select("status")
+    .select("status, document_id")
     .eq("workspace_id", primaryWorkspace.id);
 
-  const documents = (documentsData || []) as DocumentRow[];
-  const scans = (scansData || []) as ScanRow[];
-  const flags = (flagsData || []) as FlagRow[];
+  if (documentsError || scansError || flagsError) throw new Error("Could not load workspace audits");
+  const allDocuments = (documentsData || []) as DocumentRow[];
+  const documents = allDocuments.filter(document => !document.deleted_at);
+  const trashedDocuments = allDocuments.filter(document => document.deleted_at);
+  const activeIds = new Set(documents.map(document => document.id));
+  const scans = ((scansData || []) as ScanRow[]).filter(scan => activeIds.has(scan.document_id));
+  const flags = ((flagsData || []) as FlagRow[]).filter(flag => activeIds.has(flag.document_id));
 
   const latestScanByDocument = new Map<string, ScanRow>();
 
@@ -282,6 +289,13 @@ export default async function DashboardPage() {
               </div>
             )}
           </div>
+          {trashedDocuments.length > 0 ? <section className="mt-12 border-t border-line pt-8">
+            <h2 className="font-serif text-3xl mb-3">Trash</h2>
+            <p className="text-sm text-muted mb-5">Trashed audits are kept until restored. Source text and review decisions remain stored; moving to Trash does not permanently erase data.</p>
+            <div className="space-y-3">{trashedDocuments.map(document => <div key={document.id} className="bg-white border border-line rounded-sm p-5 flex flex-wrap justify-between gap-4">
+              <span>{document.title}</span><AuditTrashButton documentId={document.id} restore />
+            </div>)}</div>
+          </section> : null}
         </section>
       </main>
     </>

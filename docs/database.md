@@ -35,3 +35,9 @@ If any assertion fails, stop and inspect the failure; do not remove real data to
 Use the real magic-link flow and verify redirects, the dashboard, saving a non-sensitive sample, and changing a flag status. The development login helper is not evidence that email login works. The helper now relies on the database trigger instead of creating a duplicate workspace.
 
 Design references: [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [auth user triggers](https://supabase.com/docs/guides/auth/managing-user-data), and [database functions](https://supabase.com/docs/guides/database/functions).
+
+## Recoverable deletion migration
+
+Applied 202610020001_audit_trash.sql on October 2, 2026 after user approval. Adds documents.deleted_at and a creator-plus-membership UPDATE policy. Authenticated UPDATE permission is restricted to deleted_at; source and ownership remain immutable. Trash retains all source/scans/reviews and is not permanent data erasure.
+
+002_audit_trash.sql passed against the live schema with synthetic fixtures rolled back: own trash/restore, preserved scan, denied source/owner edits, and denied cross-user trash. Apply this migration after the initial schema on fresh installations.

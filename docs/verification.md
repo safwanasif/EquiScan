@@ -60,3 +60,9 @@ Production build, lint and all five contract tests passed. scripts/smoke-http.mj
 Added category/status filters and reviewed-count progress to live and prepared results. Filters affect only the visible list; PDF export includes all findings. Added Reopen finding to reverse a review decision through the existing authenticated status endpoint.
 
 Browser verified Open filter hides the accepted synthetic finding with an empty-state message, All statuses restores it, and Reopen finding persists after reload with 0 of 1 reviewed. The synthetic audit is now open. Build and lint passed.
+
+## October 2: recoverable audit deletion
+
+Added POST /api/audit-trash, in-app confirmation, Trash view, and restoration. Active workspace metrics omit trashed documents and their scans/flags. Detail URLs show a restore view for trashed audits. Database errors now show a workspace retry screen rather than an empty dashboard.
+
+Approved migration 202610020001 applied successfully. Rollback-only database test 002 passed (see database.md). Browser moved the synthetic Pasted Medical Text audit to Trash, verified active document count changed 2 to 1 and open flags 1 to 0, then restored it from Workspace. Counts returned to 2 documents and 1 open flag. No original data was permanently deleted. Lint and production build passed.
