@@ -53,7 +53,9 @@ const formatDate = (date: string): string => {
   });
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
+  const query = (await searchParams).q;
+  const search = typeof query === "string" ? query.trim().slice(0, 240) : "";
   const supabase = await createClient();
 
   const {
@@ -228,9 +230,17 @@ export default async function DashboardPage() {
               </Link>
             </div>
 
-            {documentsWithScans.length > 0 ? (
+            <form action="/dashboard" className="flex flex-wrap gap-3 mb-6">
+              <label className="flex-1 min-w-48 text-sm">Search audit titles
+                <input name="q" defaultValue={search} maxLength={240} placeholder="Find an audit…" className="block w-full border border-line bg-white p-3 mt-1 rounded-sm" />
+              </label>
+              <button className="self-end bg-ink text-paper px-5 py-3 rounded-sm">Search</button>
+              {search ? <Link href="/dashboard" className="self-end py-3 text-rose underline">Clear</Link> : null}
+            </form>
+            {search ? <p className="text-sm text-muted mb-4">Matching “{search}”. Workspace totals include all active audits.</p> : null}
+            {documentsWithScans.filter(document => document.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())).length > 0 ? (
               <div className="space-y-4">
-                {documentsWithScans.map((document) => (
+                {documentsWithScans.filter(document => document.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())).map((document) => (
                   <div
                     key={document.id}
                     className="bg-white border border-line rounded-sm p-6 grid md:grid-cols-12 gap-6 items-center"
@@ -274,11 +284,10 @@ export default async function DashboardPage() {
             ) : (
               <div className="bg-paperShade/40 border border-line border-dashed rounded-sm p-12 text-center">
                 <p className="font-serif text-2xl text-muted italic mb-4">
-                  No documents audited yet.
+                  {search ? "No matching audits." : "No documents audited yet."}
                 </p>
                 <p className="text-sm text-muted mb-6">
-                  Run your first audit to start building your curriculum bias
-                  report.
+                  {search ? "Try another title or clear your search." : "Run your first audit to start reviewing educational content."}
                 </p>
                 <Link
                   href="/scan"

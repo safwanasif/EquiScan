@@ -43,14 +43,17 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const text = await extractTextFromPdf(buffer);
+    const pages = await extractTextFromPdf(buffer);
+    const text = pages.map(page => page.text).join("\n\n");
 
     return NextResponse.json({
       text,
       charCount: text.length,
+      pages,
+      pageCount: pages.length,
+      emptyPages: pages.filter(page => !page.text.trim()).map(page => page.pageNumber),
     });
-  } catch (error) {
-    console.error("PDF extraction error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to extract PDF text" },
       { status: 500 }
@@ -58,7 +61,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function extractTextFromPdf(buffer: Buffer): Promise<string> {
+function extractTextFromPdf(buffer: Buffer): Promise<Array<{ pageNumber: number; text: string }>> {
   return new Promise((resolve, reject) => {
     const parser = new PDFParser(null, true);
 
@@ -76,7 +79,7 @@ function extractTextFromPdf(buffer: Buffer): Promise<string> {
           }
         };
 
-        const rawText = pdfData.Pages.map((page) => {
+        const pages = pdfData.Pages.map((page, index) => {
           const lines: string[] = [];
           let currentLine = "";
           for (const t of page.Texts) {
@@ -84,18 +87,17 @@ function extractTextFromPdf(buffer: Buffer): Promise<string> {
             currentLine += token;
           }
           lines.push(currentLine);
-          return lines.join("\n");
-        }).join("\n\n");
-
-        const cleaned = rawText
+          const cleaned = lines.join("\n")
           .replace(/\s+/g, " ")
           .replace(/([a-z])([A-Z])/g, "$1 $2")
           .replace(/\.([A-Z])/g, ". $1")
           .replace(/,([A-Za-z])/g, ", $1")
           .replace(/:([A-Z])/g, ": $1")
           .trim();
+          return { pageNumber: index + 1, text: cleaned };
+        });
 
-        resolve(cleaned);
+        resolve(pages);
       } catch (err) {
         reject(err);
       }

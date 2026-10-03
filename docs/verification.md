@@ -89,3 +89,13 @@ GitHub Checks run 37086978698 succeeded for e79b28a. Updated Next.js and eslint-
 
 Vercel's documented 4.5 MB function payload limit prompted a 4,000,000-byte PDF limit checked in client and server. Upload errors now preserve server messages. Added docs/deployment.md covering configuration, callbacks, release checks, and Supabase inactivity recovery. Hosting, public deployment, and second-account browser verification remain pending.
 Production build on Next.js 16.3.8 and HTTP/export smoke checks passed, including rejection of a 4,000,001-byte PDF before parsing.
+
+## October 2: PDF page selection and workspace search
+
+PDF extraction now returns page-numbered text, total pages, and empty-page numbers. Scanner defaults to page 1, supports an explicit contiguous page range, previews selected text, warns about empty selected pages, and disables analysis above 8,000 characters without truncation. PDF audit titles capture the selected page range. No OCR or whole-book processing is claimed.
+
+Browser uploaded the two-page NHLBI fixture: page 1 prepared 466 characters; pages 1–2 prepared 1,396 characters. Direct endpoint verification confirmed both page records and joined text. This check made no AI call and did not save an audit. Page-level extraction still uses the existing heuristic text reconstruction; formatting accuracy is not guaranteed.
+
+Workspace title search verified nhlbi matches only the saved PDF, an unmatched query shows a clear empty state, and workspace totals remain unchanged. Lint, five existing tests, production build, and HTTP smoke checks pass.
+
+Next v1 features: persist editorial drafts and rename audits, then finish accessibility/export/account-isolation checks and deploy. Draft persistence and renaming require a narrowly scoped database migration and are not yet implemented.

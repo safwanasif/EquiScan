@@ -24,6 +24,9 @@ export default function ScanPage() {
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadedText, setUploadedText] = useState<string>("");
   const [uploadedFileName, setUploadedFileName] = useState<string>("");
+  const [pdfPages, setPdfPages] = useState<Array<{ pageNumber: number; text: string }>>([]);
+  const [firstPage, setFirstPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
   const [scanning, setScanning] = useState<boolean>(false);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
@@ -47,7 +50,8 @@ export default function ScanPage() {
       return pastedText;
     }
 
-    return uploadedText;
+    return pdfPages.length ? pdfPages.filter(page => page.pageNumber >= firstPage && page.pageNumber <= lastPage)
+      .map(page => page.text).join("\n\n") : uploadedText;
   };
 
   const getDocumentTitle = (): string => {
@@ -56,7 +60,7 @@ export default function ScanPage() {
     }
 
     if (inputMode === "upload") {
-      return uploadedFileName || "Uploaded PDF";
+      return pdfPages.length ? `${uploadedFileName} · pages ${firstPage}–${lastPage}` : uploadedFileName || "Uploaded PDF";
     }
 
     return "Pasted Medical Text";
@@ -93,6 +97,7 @@ export default function ScanPage() {
 
     setUploading(true);
     setUploadedText("");
+    setPdfPages([]);
     setError(null);
     setUploadedFileName(file.name);
 
@@ -119,6 +124,10 @@ export default function ScanPage() {
 
       const data = await response.json();
       setUploadedText(data.text);
+      setPdfPages(data.pages);
+      setFirstPage(1);
+      // Start with one page; users explicitly choose broader coverage.
+      setLastPage(1);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read that PDF. Try another file or paste the text.");
       setUploadedFileName("");
@@ -348,6 +357,25 @@ export default function ScanPage() {
                         </div>
                       )}
                     </label>
+                    {pdfPages.length > 0 ? <div className="mt-6 space-y-4">
+                      <p className="text-sm text-muted">{pdfPages.length} pages extracted. Select the pages to analyse; the rest will not be scanned. PDF page numbers may differ from printed page labels.</p>
+                      <div className="flex flex-wrap gap-4">
+                        <label className="text-sm">From page
+                          <select value={firstPage} onChange={event => { const page = Number(event.target.value); setFirstPage(page); setLastPage(Math.max(page, lastPage)); }} className="block border border-line bg-paper p-2 mt-1">
+                            {pdfPages.map(page => <option key={page.pageNumber} value={page.pageNumber}>{page.pageNumber}</option>)}
+                          </select>
+                        </label>
+                        <label className="text-sm">Through page
+                          <select value={lastPage} onChange={event => setLastPage(Number(event.target.value))} className="block border border-line bg-paper p-2 mt-1">
+                            {pdfPages.filter(page => page.pageNumber >= firstPage).map(page => <option key={page.pageNumber} value={page.pageNumber}>{page.pageNumber}</option>)}
+                          </select>
+                        </label>
+                      </div>
+                      <p className="text-sm text-muted">Selected pages: {firstPage}–{lastPage} of {pdfPages.length}. {getCurrentText().length.toLocaleString()} / 8,000 characters.</p>
+                      {pdfPages.some(page => page.pageNumber >= firstPage && page.pageNumber <= lastPage && !page.text.trim()) ? <p role="alert" className="text-sm text-rose">Some selected pages have no extracted text. Images and scanned pages are not analysed; paste their text manually.</p> : null}
+                      {getCurrentText().length > MAX_SCAN_CHARACTERS ? <p role="alert" className="text-sm text-rose">Select fewer pages or paste a shorter section. Nothing will be silently shortened.</p> : null}
+                      <details><summary className="text-sm cursor-pointer">Preview selected text</summary><pre className="mt-3 whitespace-pre-wrap text-sm max-h-64 overflow-auto border border-line p-3">{getCurrentText()}</pre></details>
+                    </div> : null}
                   </div>
                 ) : null}
 
@@ -362,7 +390,7 @@ export default function ScanPage() {
 
                   <button
                     onClick={handleScan}
-                    disabled={scanning || uploading || getCurrentText().trim().length < 50}
+                    disabled={scanning || uploading || getCurrentText().trim().length < 50 || getCurrentText().length > MAX_SCAN_CHARACTERS}
                     className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3 text-base hover:bg-rose transition-colors rounded-sm disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {scanning ? (
