@@ -105,3 +105,11 @@ Next v1 features: persist editorial drafts and rename audits, then finish access
 Replaced the workspace average concern score and letter grade with review progress. Accepted, resolved, and dismissed findings count as reviewed; open findings do not. Empty findings show no findings to review. This measures recorded decisions, not document quality or improvement. Browser verified current workspace shows 0 of 1 reviewed and one open finding.
 
 Approved migration 202610020003 applied successfully. Rollback-only SQL test 004 passed: creator rename, title trimming, immutable source, invalid titles, and denial for trashed and cross-user documents. Browser renamed the existing synthetic audit to Synthetic pronoun review and confirmed persistence after reload. Build and lint passed before application. Saved editorial drafts remain the next feature.
+
+## October 2: saved editorial addenda
+
+Approved migration 202610020004 applied. Added creator-scoped editorial_drafts storage, column-limited updates, signed-in validated save endpoint, explicit Save draft control, and reopened audit draft loading. Latest saved draft per scan is retained; displaying a new draft does not erase the prior saved copy until explicitly saved. Saving uses no provider request. Alternative rewrites remain transient.
+
+SQL test 005 passed own save/update, immutable creator, anonymous denial, and cross-user read/update denial, with all fixtures rolled back. Browser generated a 64-word editorial addendum for the existing synthetic pronoun audit, saved it, and confirmed the same content after reload without regeneration. This demonstrates workflow, not clinical validity. Saved draft is supplied to the existing PDF export; a rendered export containing this new saved draft has not yet been verified.
+
+Lint, production build, five existing tests, and HTTP smoke checks passed. Next: final product copy/accessibility/export/account checks and deployment.

@@ -461,6 +461,7 @@ export default function ScanPage() {
               scanResult={scanResult}
               addendum={addendum}
               setAddendum={setAddendum}
+              scanId={savedScan?.scanId}
             />
           </section>
         ) : null}

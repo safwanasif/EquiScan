@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import ScanResults from "@/components/ScanResults";
+import SavedAuditReview from "@/components/SavedAuditReview";
 import AuditTrashButton from "@/components/AuditTrashButton";
 import AuditTitleEditor from "@/components/AuditTitleEditor";
 import { createClient } from "@/lib/supabase/server";
-import { validateScanResult } from "@/lib/analysis/validate";
+import { validateScanResult, validateAddendum } from "@/lib/analysis/validate";
 
 export default async function AuditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -33,6 +33,9 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     <AuditTrashButton documentId={scan.document_id} restore />
   </main></>;
   const rows = flagsQuery.data || [];
+  const { data: draft, error: draftError } = await db.from("editorial_drafts").select("addendum").eq("scan_id", id).maybeSingle();
+  if (draftError) throw new Error("Could not load editorial draft");
+  const initialAddendum = draft ? validateAddendum(draft.addendum) : null;
   const result = validateScanResult({ documentBiasScore: Number(scan.bias_score), summary: scan.summary,
     flags: rows.map(row => ({ flaggedSentence: row.flagged_sentence, category: row.category, severity: row.severity,
       explanation: row.explanation, suggestedRewrite: row.suggested_rewrite })) }, document.raw_text);
@@ -50,7 +53,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     <h1 className="font-serif text-4xl mb-4 break-words">{document.title}</h1>
     <div className="mb-5 flex flex-wrap gap-5"><AuditTitleEditor documentId={scan.document_id} title={document.title} /><AuditTrashButton documentId={scan.document_id} /></div>
     <p className="text-muted mb-8">Original findings and saved review decisions. Reopening does not run a new analysis. Additional rewrites are generated on demand and are not saved with this audit.</p>
-    <ScanResults key={id} originalText={document.raw_text} result={result} documentTitle={document.title}
-      flagIdMap={flagIdMap} initialStatuses={initialStatuses} />
+    <SavedAuditReview key={id} scanId={id} originalText={document.raw_text} result={result} documentTitle={document.title}
+      flagIdMap={flagIdMap} initialStatuses={initialStatuses} initialAddendum={initialAddendum} />
   </main></>;
 }

@@ -8,6 +8,7 @@ interface Props {
   scanResult: ScanResult;
   addendum: Addendum | null;
   setAddendum: (a: Addendum | null) => void;
+  scanId?: string;
 }
 
 export default function AddendumPanel({
@@ -15,9 +16,12 @@ export default function AddendumPanel({
   scanResult,
   addendum,
   setAddendum,
+  scanId,
 }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -34,6 +38,7 @@ export default function AddendumPanel({
       }
       const data: Addendum = await response.json();
       setAddendum(data);
+      setSaveMessage("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not generate addendum. Try again.");
     } finally {
@@ -64,7 +69,7 @@ export default function AddendumPanel({
           </h2>
           <p className="text-paper/70 text-lg leading-relaxed mb-8 max-w-2xl">
             Draft a short note addressing the flagged language. Check every claim
-            before use. This draft is not saved with your audit; export it to keep a copy.
+            before use. Save the draft to your audit or export it to keep a copy.
           </p>
           <button
             onClick={handleGenerate}
@@ -115,7 +120,17 @@ export default function AddendumPanel({
             {addendum ? addendum.wordCount : 0} words
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          {scanId ? <button disabled={saving} onClick={async () => {
+            setSaving(true); setSaveMessage("");
+            try {
+              const response = await fetch("/api/editorial-draft", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scanId, addendum }) });
+              const data = await response.json();
+              if (!response.ok) throw new Error(data.error || "Could not save draft.");
+              setSaveMessage("Draft saved. It will reopen with this audit.");
+            } catch (failure) { setSaveMessage(failure instanceof Error ? failure.message : "Could not connect. Export to keep a copy."); }
+            finally { setSaving(false); }
+          }} className="text-xs font-mono uppercase py-2 px-4 border border-line disabled:opacity-40">{saving ? "Saving…" : "Save draft"}</button> : null}
           <button
             onClick={handleCopy}
             className="text-xs font-mono uppercase tracking-widest py-2 px-4 border border-line hover:border-ink transition-colors rounded-sm"
@@ -123,13 +138,16 @@ export default function AddendumPanel({
             Copy
           </button>
           <button
-            onClick={() => setAddendum(null)}
+            disabled={saving}
+            onClick={() => { setAddendum(null); setSaveMessage(""); }}
             className="text-xs font-mono uppercase tracking-widest py-2 px-4 bg-ink text-paper hover:bg-rose transition-colors rounded-sm"
           >
             Regenerate
           </button>
         </div>
       </div>
+
+      {saveMessage ? <p role="status" className="text-sm text-muted mb-4">{saveMessage}</p> : null}
 
       {addendum && addendum.topicsCovered && addendum.topicsCovered.length > 0 ? (
         <div className="mb-8">
