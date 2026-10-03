@@ -113,3 +113,9 @@ Approved migration 202610020004 applied. Added creator-scoped editorial_drafts s
 SQL test 005 passed own save/update, immutable creator, anonymous denial, and cross-user read/update denial, with all fixtures rolled back. Browser generated a 64-word editorial addendum for the existing synthetic pronoun audit, saved it, and confirmed the same content after reload without regeneration. This demonstrates workflow, not clinical validity. Saved draft is supplied to the existing PDF export; a rendered export containing this new saved draft has not yet been verified.
 
 Lint, production build, five existing tests, and HTTP smoke checks passed. Next: final product copy/accessibility/export/account checks and deployment.
+
+## October 2: final product copy and deployment preparation
+
+Removed unsupported landing claims about publication-ready addenda, fixed completion times, missing chapters, and clinically defined categories. Metadata now describes excerpt-based editorial review. Addendum copy reports clipboard success/failure, labels the draft unverified, and explains that starting a new draft preserves the saved copy until replacement.
+
+Lint, five tests, production build, HTTP smoke checks and synthetic PDF export check passed. Vercel Hobby account is signed in, existing EquiScan GitHub repository is available, and Next.js import configuration is prepared with root ./. No project creation or deployment has been submitted. Secret entry is handed to the user in the Vercel environment panel.

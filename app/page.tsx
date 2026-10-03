@@ -149,14 +149,14 @@ export default function Home() {
               <div>
                 <p className="font-serif text-3xl text-rose mb-4 italic">04</p>
                 <p className="font-mono text-xs tracking-widest text-muted uppercase mb-3">
-                  Publish
+                  Draft
                 </p>
                 <h3 className="font-serif text-2xl leading-tight mb-3">
-                  Generate the missing chapter.
+                  Prepare an editorial note.
                 </h3>
                 <p className="text-sm text-ink/80 leading-relaxed">
-                  The model drafts the Sex and Gender Considerations section that
-                  should have been there all along.
+                  Generate a short addendum addressing flagged language. Review
+                  every claim, save it with your audit, or include it in a report.
                 </p>
               </div>
             </div>
@@ -172,11 +172,11 @@ export default function Home() {
                 <span className="section-label">Methodology</span>
               </div>
               <h2 className="font-serif text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-                Five categories of bias, defined clinically.
+                Five categories for editorial review.
               </h2>
               <p className="text-lg text-muted leading-relaxed">
-                Each category is grounded in peer-reviewed research and maps to
-                specific diagnostic harms.
+                Review potential sex and gender concerns supported by the excerpt.
+                These categories guide inspection; findings require human judgment.
               </p>
             </div>
 
@@ -251,13 +251,13 @@ export default function Home() {
                 <span className="section-label">Ready when you are</span>
               </div>
               <h2 className="font-serif text-4xl lg:text-6xl leading-[1.05] tracking-tight mb-6">
-                Audit a chapter.
+                Review an excerpt.
                 <br />
-                Write what was missing.
+                Make your next edit clearer.
               </h2>
               <p className="text-lg text-muted leading-relaxed mb-10 max-w-2xl mx-auto">
-                One minute to a full bias report. Fifteen seconds to a
-                publication-ready addendum.
+                Inspect quoted findings, record your review decisions, and export
+                a report. Generated suggestions remain drafts for human review.
               </p>
               <Link
                 href="/scan"

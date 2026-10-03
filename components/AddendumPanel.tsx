@@ -46,10 +46,15 @@ export default function AddendumPanel({
     }
   };
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (!addendum) return;
     const fullText = `${addendum.title}\n\n${addendum.content}`;
-    navigator.clipboard.writeText(fullText);
+    try {
+      await navigator.clipboard.writeText(fullText);
+      setSaveMessage("Draft copied to clipboard.");
+    } catch {
+      setSaveMessage("Clipboard access failed. Select the draft text and copy it manually.");
+    }
   };
 
   if (scanResult.flags.length === 0) return null;
@@ -101,7 +106,7 @@ export default function AddendumPanel({
             <span className="w-2 h-2 bg-rose rounded-full slow-pulse" style={{ animationDelay: "0.4s" }} />
           </div>
           <p className="font-serif text-xl text-paper/80 italic">
-            Drafting in clinical register.
+            Preparing an editorial draft.
           </p>
         </div>
       </div>
@@ -142,12 +147,13 @@ export default function AddendumPanel({
             onClick={() => { setAddendum(null); setSaveMessage(""); }}
             className="text-xs font-mono uppercase tracking-widest py-2 px-4 bg-ink text-paper hover:bg-rose transition-colors rounded-sm"
           >
-            Regenerate
+            Start a new draft
           </button>
         </div>
       </div>
 
       {saveMessage ? <p role="status" className="text-sm text-muted mb-4">{saveMessage}</p> : null}
+      <p className="text-sm text-muted mb-5">Unverified editorial draft. Review every claim before use. Starting a new draft keeps your saved copy until you explicitly save a replacement.</p>
 
       {addendum && addendum.topicsCovered && addendum.topicsCovered.length > 0 ? (
         <div className="mb-8">

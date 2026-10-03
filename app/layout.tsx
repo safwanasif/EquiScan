@@ -19,7 +19,7 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "EquiScan — Gender Bias Detection for Medical Content",
   description:
-    "Audit medical textbooks, papers, and curricula for gender bias. Generate the content that should have been there.",
+    "Review potential sex and gender bias in medical educational excerpts, record editorial decisions, and export reports.",
 };
 
 export default function RootLayout({
