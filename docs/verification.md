@@ -74,3 +74,11 @@ Applied migration 202610020002 and passed rollback-only SQL test 003: server-onl
 Removed the development instant-login endpoint and button. Production HTTP smoke checks pass for valid unsigned scan/rewrite/addendum requests returning 401 and the removed endpoint returning 404, in addition to existing checks. Production build and lint pass. Signed-in workspace reload still shows both saved audits.
 
 Result UI now calls the score an AI concern score and explains its uncalibrated nature, lower-is-fewer direction, excerpt scope, and independence from review decisions.
+
+## October 2: mobile and download reliability
+
+Inspected workspace, saved audit, scanner, and prepared demo at a 390 by 844 viewport. Workspace, saved audit, and demo had document width 375 versus viewport 390, with no horizontal overflow. Visible headings, navigation, score, and primary controls fit. This is a spot check, not full device or keyboard coverage.
+
+Changed PDF Blob URL cleanup from immediate revocation to a 60-second delay so the browser can begin reading it. PDF endpoint smoke check, lint, and production build pass. In-app-browser download events still timed out; an actual saved browser download remains unverified. No export failure message appeared.
+
+Added GitHub Actions for npm ci, lint, and the existing validation/provider-adapter tests on Node 24. It requires no project secrets or live model calls. Remote CI execution is pending.

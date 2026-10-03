@@ -139,7 +139,8 @@ export default function ScanResults({
       a.click();
       document.body.removeChild(a);
 
-      window.URL.revokeObjectURL(url);
+      // Allow browsers time to begin reading the Blob before releasing it.
+      setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
     } catch (err) {
       console.error("Action failed");
       setActionError(err instanceof Error ? err.message : "Action failed. Please try again.");
