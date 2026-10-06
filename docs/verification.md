@@ -153,3 +153,10 @@ Reviewer-note migration was applied by the owner and showed success on October 6
 ## October 6: deployed feature inspection
 
 Production audit page serves the reviewer-note field and revised-text preview after deployment 456da8b. Existing saved synthetic rationale loaded correctly. Selecting one suggested edit changed only the revised preview; original content stayed unchanged. This check did not perform a fresh production note write or observe revised-text download. Feature-roadmap.md now separates shipped work from planned features and remaining verification.
+
+## October 6: source passage navigation and long-note report check
+
+Added Go to passage in analyzed text to expanded findings, with scrolling and keyboard focus on the source highlight. Source highlights support Enter/Space to open a finding. If an overlapping finding has no rendered highlight, the UI explains how to locate its quote rather than jumping to a wrong passage. This navigates extracted source text, not the original PDF page; persisted page coordinates remain planned.
+
+Widened the revised draft editor to span the desktop review grid. Production export smoke check with a 1,740-character synthetic reviewer note returned a valid PDF. Both pages were rendered and inspected: note, review decision and rewrite readable, with no clipping. The entire finding moves to page two and leaves whitespace on page one; more complex report layouts remain untested.
+Local browser verified Go to passage moves keyboard focus to the matching source highlight. Lint and production build passed.

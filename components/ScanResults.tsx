@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ScanResult, BiasFlag, BiasCategory, Addendum } from "@/lib/types";
 import { BIAS_CATEGORIES } from "@/data/biasCategories";
 import ReviewerNote from "@/components/ReviewerNote";
@@ -50,6 +50,18 @@ export default function ScanResults({
   initialNotes = {},
 }: Props) {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
+  const passageRefs = useRef<Record<string, HTMLElement | null>>({});
+  const goToPassage = (flag: BiasFlag) => {
+    setExpandedFlag(flag.id);
+    const passage = passageRefs.current[flag.id];
+    if (!passage) {
+      setActionError("This passage overlaps another highlighted finding. Locate the quoted text in the analyzed document.");
+      return;
+    }
+    setActionError(null);
+    passage.scrollIntoView({ behavior: "smooth", block: "center" });
+    passage.focus({ preventScroll: true });
+  };
   const [rewrites, setRewrites] = useState<RewritesMap>({});
   const [loadingRewrite, setLoadingRewrite] = useState<string | null>(null);
   const [activeRewriteMode, setActiveRewriteMode] = useState<ModeMap>({});
@@ -232,6 +244,11 @@ export default function ScanResults({
       elements.push(
         <mark
           key={key++}
+          ref={element => { passageRefs.current[flag.id] = element; }}
+          tabIndex={0}
+          role="button"
+          aria-label={`Review highlighted passage: ${flag.flaggedSentence}`}
+          onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleExpandFlag(flag); } }}
           onClick={() => handleExpandFlag(flag)}
           className={`cursor-pointer transition-all ${
             status !== "open"
@@ -435,6 +452,7 @@ export default function ScanResults({
                       </div>
 
                       {!demo && flagIdMap[flag.id] ? <ReviewerNote flagId={flagIdMap[flag.id]} initialNote={reviewerNotes[flag.id] || ""} onSaved={note => setReviewerNotes(previous => ({ ...previous, [flag.id]: note }))} /> : null}
+                      <button onClick={() => goToPassage(flag)} className="block text-sm underline underline-offset-4 mt-4 mb-4">Go to passage in analyzed text</button>
                       {isLoading ? (
                         <p className="text-xs text-muted font-mono uppercase tracking-widest slow-pulse">
                           Generating rewrites
@@ -518,7 +536,7 @@ export default function ScanResults({
           </div>
         </div>
       </div>
-      {!demo && result.flags.length > 0 ? <RevisionPreview source={originalText} result={result} /> : null}
+      {!demo && result.flags.length > 0 ? <div className="lg:col-span-3"><RevisionPreview source={originalText} result={result} /></div> : null}
     </div>
   );
 }

@@ -10,7 +10,7 @@ const result = {
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://localhost:3000';
 const response = await fetch(new URL('/api/export-pdf', baseUrl), {
   method: 'POST', headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ originalText, result, documentTitle: 'Synthetic review export test', reviewDecisions: { 'flag-1': 'accepted' } }),
+  body: JSON.stringify({ originalText, result, documentTitle: 'Synthetic review export test', reviewDecisions: { 'flag-1': 'accepted' }, reviewerNotes: { 'flag-1': process.env.SMOKE_LONG_NOTE ? 'Synthetic reviewer rationale. '.repeat(60) : 'Accepted inclusive wording; original retained.' } }),
 });
 assert.equal(response.status, 200);
 assert.match(response.headers.get('content-type'), /application\/pdf/);
