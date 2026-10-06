@@ -168,3 +168,9 @@ Added immutable draft snapshots and atomic revised-audit creation/linking using 
 Eight tests pass, including comparison matching. Migration 202610060002 and rollback-only test 007 are prepared but not applied/run. End-to-end save/rescan and permission verification await database approval. Earlier roadmap feature status remains unchanged until verification.
 
 Revision migration was applied by the owner and returned success. SQL test 007 passed draft/rescan creation, original preservation, invalid text, Trash, cross-user and anonymous denial. Browser saved a draft snapshot and then ran a live rescan of the synthetic edited excerpt. Both persisted after reload; linked child audit 438098a5-daf0-447b-9d57-3b06a2d09728 had zero findings and comparison showed two no longer reported. This is one workflow check, not evaluation evidence. Eight tests, lint and build passed. Removed remaining landing promises of eight-second analysis, whole-document grading and automatic three-rewrite availability.
+
+## October 6: production revisions and public evaluation evidence
+
+Production audit reopened with saved revision history and snapshot/rescan controls. Local /evaluation page verified without an account: displays four synthetic development fixtures, historical observations, source-grounding and database test descriptions, and missing evaluation coverage. It explicitly rejects interpreting tuned smoke cases as held-out accuracy. Route bypasses auth refresh just like /demo, and has no AI call. Lint and production build passed. This is an evidence page, not completion of a representative evaluation benchmark.
+
+Prepared docs/recruiter-walkthrough.md with demo sequence, frontend/backend explanation and accurate resume wording; planned PDF page mapping and remaining verification are disclosed.

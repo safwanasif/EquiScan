@@ -44,6 +44,7 @@ export default function DemoPage() {
     </section>
     <ScanResults originalText={source} result={result} documentTitle="EquiScan prepared sample" demo />
     <section className="mt-12 border-t border-line pt-8">
+      <p className="text-sm mb-5"><a href="/evaluation" className="underline">See our development tests and evaluation limitations</a></p>
       <h2 className="font-serif text-3xl mb-3">Try your own walkthrough</h2>
       <p className="text-muted mb-4">Download a synthetic text fixture, then paste its contents into the scanner. These are development examples, not clinical guidance or a validated benchmark. Live scans require sign-in and results may vary.</p>
       <ul className="space-y-2 text-sm">

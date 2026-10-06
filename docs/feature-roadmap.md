@@ -9,8 +9,8 @@ Updated October 6, 2026. Recommendations, not implemented features unless stated
 | Reviewer notes | Implemented and deployed; restricted migration applied; SQL permissions tested; saved note loads in production | Long-note PDF layout verified; fresh production note write remains |
 | Before/after draft preview | Implemented and deployed; edit selection works in production; undo tested locally | Actual revised-text browser download; word-level highlighting and persistent draft versions are not implemented |
 | PDF source navigation | Extracted-text passage jump implemented locally; original PDF mapping planned | Findings still have no persisted PDF page/offset mapping |
-| Audit version comparison | Implemented locally; private snapshots, linked rescans and comparison tested | Production deployment verification remains; matching is exact quote/category only |
-| Evaluation dashboard | Planned | Existing tiny synthetic cases are development checks, not a reviewed benchmark |
+| Audit version comparison | Implemented locally; private snapshots, linked rescans and comparison tested | Production history loading verified; matching is exact quote/category only |
+| Evaluation dashboard | Public evidence page implemented and locally verified | Representative independently reviewed benchmark remains planned |
 | Tags and favourites | Planned | Existing title search and finding filters remain available |
 
 Guest restrictions are implemented. Guest/account comparison and sign-in prompt are implemented. Application quotas are removed; provider limits still apply.

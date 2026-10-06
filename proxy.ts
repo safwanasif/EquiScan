@@ -9,7 +9,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login?error=auth_failed", request.url));
   }
   // The prepared sample must remain available without authentication services.
-  if (request.nextUrl.pathname === "/demo" || request.nextUrl.pathname.startsWith("/samples/")) return NextResponse.next();
+  if (["/demo", "/evaluation"].includes(request.nextUrl.pathname) || request.nextUrl.pathname.startsWith("/samples/")) return NextResponse.next();
   let response = NextResponse.next({
     request: {
       headers: request.headers,

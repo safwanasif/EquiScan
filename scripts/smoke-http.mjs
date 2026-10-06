@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 
 const base = process.env.SMOKE_BASE_URL || 'http://localhost:3000';
-for (const path of ['/demo', '/samples/generic-pronoun.txt', '/login']) {
+for (const path of ['/demo', '/evaluation', '/samples/generic-pronoun.txt', '/login']) {
   const response = await fetch(new URL(path, base));
   assert.equal(response.status, 200, path);
 }
