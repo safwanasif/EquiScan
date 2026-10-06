@@ -277,6 +277,7 @@ interface ReportPDFProps {
   addendum?: Addendum | null;
   documentTitle?: string;
   reviewDecisions?: Record<string, string>;
+  reviewerNotes?: Record<string, string>;
 }
 
 export default function ReportPDF({
@@ -284,6 +285,7 @@ export default function ReportPDF({
   addendum,
   documentTitle,
   reviewDecisions = {},
+  reviewerNotes = {},
 }: ReportPDFProps) {
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -351,6 +353,7 @@ export default function ReportPDF({
 
               <Text style={styles.flagExplanation}>{flag.explanation}</Text>
               <Text style={styles.flagSubLabel}>Review decision: {reviewDecisions[flag.id] || "open"}</Text>
+              {reviewerNotes[flag.id] ? <Text style={styles.flagExplanation}>Reviewer note: {reviewerNotes[flag.id]}</Text> : null}
 
               <Text style={styles.flagSubLabel}>Suggested Rewrite</Text>
               <Text style={styles.rewriteText}>{flag.suggestedRewrite}</Text>

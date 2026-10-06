@@ -141,3 +141,11 @@ Asked the owner to confirm the Chrome download and availability of a second Goog
 Added a native modal dialog when signed-out visitors attempt a live scan. It offers sign-in/account creation, the prepared guest demo, or Keep editing. The client verifies auth before submitting text; server routes independently enforce authentication. Browser verified the prompt and return to the unchanged sample editor. Live anonymous inference is not enabled.
 
 Removed application daily and minute caps at the owner's request. Scan/rewrite/addendum now verify the session without calling reserve_ai_request; provider limits still apply. Historical quota SQL remains unused. Service-role configuration is no longer needed for this flow. Build, lint, and five tests passed. Owner also confirmed Chrome PDF download and that the website Demo navigation works.
+
+## October 6: reviewer notes and revised-text preview (local, pending database application)
+
+Implemented explicit finding notes, saved-note inclusion in PDF report payloads, reopened note loading from existing resolution_note, and a creator-restricted save_reviewer_note RPC migration. No migration has been applied yet; note persistence is not verified. Rollback-only test 006 covers own save/clear, size limits, unchanged status, Trash and cross-user denial; prepared, not run.
+
+Added account-only revised-text preview with individual suggested edit selections, separate original/revised columns, undo-all, and plain-text download. Drafts are temporary; original audit text/status are unchanged. Missing, repeated or overlapping source quotations are rejected. Two meaningful edit tests pass; seven tests total, lint and production build pass. Browser verification remains pending. Guest demo has neither notes nor revised text export.
+
+Reviewer-note migration was applied by the owner and showed success on October 6. Rollback-only SQL test 006 passed own save/clear, length enforcement, unchanged status, Trash and cross-user denial. Local authenticated browser saved an 83-character synthetic rationale on the production smoke fixture and reloaded the same note successfully. Revised-text selection and undo were verified in the local browser. PDF note layout and actual revised-text download remain unverified; deployment of these features is next.

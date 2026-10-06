@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     let addendum: Addendum | null = null;
     let documentTitle: string | undefined;
     const reviewDecisions: Record<string, string> = {};
+    const reviewerNotes: Record<string, string> = {};
     try {
       if (!body || typeof body.originalText !== "string" || body.originalText.length > MAX_SCAN_CHARACTERS) throw new Error();
       result = validateScanResult(body.result, body.originalText);
@@ -31,6 +32,14 @@ export async function POST(req: NextRequest) {
           reviewDecisions[flag.id] = status;
         }
       }
+      if (body.reviewerNotes !== undefined) {
+        if (!body.reviewerNotes || typeof body.reviewerNotes !== "object" || Array.isArray(body.reviewerNotes)) throw new Error();
+        for (const flag of result.flags) {
+          const note = body.reviewerNotes[flag.id] ?? "";
+          if (typeof note !== "string" || note.length > 2000) throw new Error();
+          reviewerNotes[flag.id] = note;
+        }
+      }
     } catch {
       return NextResponse.json({ error: "Invalid report data" }, { status: 400 });
     }
@@ -40,6 +49,7 @@ export async function POST(req: NextRequest) {
       addendum,
       documentTitle,
       reviewDecisions,
+      reviewerNotes,
     });
 
     const pdfElement = element as unknown as Parameters<

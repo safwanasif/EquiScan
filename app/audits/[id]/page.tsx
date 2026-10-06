@@ -20,7 +20,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
   if (!scan) notFound();
   const [documentQuery, flagsQuery] = await Promise.all([
     db.from("documents").select("title, raw_text, deleted_at").eq("id", scan.document_id).eq("workspace_id", scan.workspace_id).maybeSingle(),
-    db.from("flags").select("id, flag_index, flagged_sentence, category, severity, explanation, suggested_rewrite, status")
+    db.from("flags").select("id, flag_index, flagged_sentence, category, severity, explanation, suggested_rewrite, status, resolution_note")
       .eq("scan_id", id).eq("workspace_id", scan.workspace_id).order("flag_index"),
   ]);
   if (documentQuery.error || flagsQuery.error) throw new Error("Could not load audit details");
@@ -40,10 +40,12 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     flags: rows.map(row => ({ flaggedSentence: row.flagged_sentence, category: row.category, severity: row.severity,
       explanation: row.explanation, suggestedRewrite: row.suggested_rewrite })) }, document.raw_text);
   const flagIdMap: Record<string, string> = {};
+  const initialNotes: Record<string, string> = {};
   const initialStatuses: Record<string, "open" | "accepted" | "resolved" | "dismissed"> = {};
   rows.forEach((row, index) => {
     const localId = result.flags[index].id;
     flagIdMap[localId] = row.id;
+    initialNotes[localId] = row.resolution_note || "";
     if (!["open", "accepted", "resolved", "dismissed"].includes(row.status)) throw new Error("Invalid saved review status");
     initialStatuses[localId] = row.status as "open" | "accepted" | "resolved" | "dismissed";
   });
@@ -54,6 +56,6 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     <div className="mb-5 flex flex-wrap gap-5"><AuditTitleEditor documentId={scan.document_id} title={document.title} /><AuditTrashButton documentId={scan.document_id} /></div>
     <p className="text-muted mb-8">Original findings and saved review decisions. Reopening does not run a new analysis. Additional rewrites are generated on demand and are not saved with this audit.</p>
     <SavedAuditReview key={id} scanId={id} originalText={document.raw_text} result={result} documentTitle={document.title}
-      flagIdMap={flagIdMap} initialStatuses={initialStatuses} initialAddendum={initialAddendum} />
+      flagIdMap={flagIdMap} initialStatuses={initialStatuses} initialNotes={initialNotes} initialAddendum={initialAddendum} />
   </main></>;
 }

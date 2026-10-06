@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { ScanResult, BiasFlag, BiasCategory, Addendum } from "@/lib/types";
 import { BIAS_CATEGORIES } from "@/data/biasCategories";
+import ReviewerNote from "@/components/ReviewerNote";
+import RevisionPreview from "@/components/RevisionPreview";
 
 type RewriteMode = "conservative" | "balanced" | "comprehensive";
 type FlagStatus = "open" | "accepted" | "resolved" | "dismissed";
@@ -26,6 +28,7 @@ interface Props {
   flagIdMap?: FlagIdMap;
   demo?: boolean;
   initialStatuses?: StatusMap;
+  initialNotes?: Record<string, string>;
 }
 
 const GRADE_COLORS: { [key: string]: { bg: string; text: string } } = {
@@ -44,6 +47,7 @@ export default function ScanResults({
   flagIdMap = {},
   demo = false,
   initialStatuses = {},
+  initialNotes = {},
 }: Props) {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const [rewrites, setRewrites] = useState<RewritesMap>({});
@@ -51,6 +55,7 @@ export default function ScanResults({
   const [activeRewriteMode, setActiveRewriteMode] = useState<ModeMap>({});
   const [exporting, setExporting] = useState<boolean>(false);
   const [flagStatuses, setFlagStatuses] = useState<StatusMap>(initialStatuses);
+  const [reviewerNotes, setReviewerNotes] = useState(initialNotes);
   const [updatingFlag, setUpdatingFlag] = useState<string | null>(null);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<BiasCategory | "all">("all");
@@ -122,7 +127,7 @@ export default function ScanResults({
       const response = await fetch("/api/export-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ result, addendum, documentTitle, originalText, reviewDecisions: Object.fromEntries(result.flags.map(flag => [flag.id, getFlagStatus(flag.id)])) }),
+        body: JSON.stringify({ result, addendum, documentTitle, originalText, reviewerNotes, reviewDecisions: Object.fromEntries(result.flags.map(flag => [flag.id, getFlagStatus(flag.id)])) }),
       });
 
       if (!response.ok) {
@@ -429,6 +434,7 @@ export default function ScanResults({
                         ) : null}
                       </div>
 
+                      {!demo && flagIdMap[flag.id] ? <ReviewerNote flagId={flagIdMap[flag.id]} initialNote={reviewerNotes[flag.id] || ""} onSaved={note => setReviewerNotes(previous => ({ ...previous, [flag.id]: note }))} /> : null}
                       {isLoading ? (
                         <p className="text-xs text-muted font-mono uppercase tracking-widest slow-pulse">
                           Generating rewrites
@@ -512,6 +518,7 @@ export default function ScanResults({
           </div>
         </div>
       </div>
+      {!demo && result.flags.length > 0 ? <RevisionPreview source={originalText} result={result} /> : null}
     </div>
   );
 }
