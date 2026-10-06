@@ -1,6 +1,6 @@
 # Deployment and recovery
 
-Proposed v1 host: Vercel Hobby for this personal portfolio application, with the existing Supabase and Groq projects. Deployment has not yet been performed.
+Deployed October 5, 2026 on Vercel Hobby with the existing Supabase and Groq projects. Live app: https://equi-scan.vercel.app. Prepared demo: https://equi-scan.vercel.app/demo. Project equi-scan is linked to safwanasif/EquiScan on main. Production Google sign-in and saved audit/addendum loading passed; see verification.md for remaining checks.
 
 Vercel functions limit request bodies to 4.5 MB. EquiScan limits PDFs to 4,000,000 bytes, checked before uploading and on the server, leaving room for multipart overhead. Analysis still accepts at most 8,000 extracted characters. Larger documents require a smaller section; image-only PDFs need text pasted manually.
 

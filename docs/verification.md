@@ -119,3 +119,11 @@ Lint, production build, five existing tests, and HTTP smoke checks passed. Next:
 Removed unsupported landing claims about publication-ready addenda, fixed completion times, missing chapters, and clinically defined categories. Metadata now describes excerpt-based editorial review. Addendum copy reports clipboard success/failure, labels the draft unverified, and explains that starting a new draft preserves the saved copy until replacement.
 
 Lint, five tests, production build, HTTP smoke checks and synthetic PDF export check passed. Vercel Hobby account is signed in, existing EquiScan GitHub repository is available, and Next.js import configuration is prepared with root ./. No project creation or deployment has been submitted. Secret entry is handed to the user in the Vercel environment panel.
+
+## October 5: production deployment and authentication
+
+The owner deployed through Vercel after entering environment variables. Production https://equi-scan.vercel.app passed public HTTP smoke checks for demo/sample/login routes, unsigned workspace redirects, OAuth error recovery, invalid/oversized requests, protected AI routes, and removed development login. These checks made no provider calls or database writes.
+
+Approved Supabase Site URL https://equi-scan.vercel.app was saved and confirmed after reload. Exact production and localhost /auth/callback URLs remain allowed. Production Google login reached the authenticated workspace and loaded both existing audits. The synthetic audit reopened with source, finding, status, and saved 64-word addendum. This verifies persistence, not fresh inference or clinical validity.
+
+Remaining: fresh production scan/save/review, actual browser PDF download, second-account production login/isolation, broader keyboard/accessibility checks, and portfolio recording. Repository remains private. See deployment.md for recovery guidance.
