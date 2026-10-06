@@ -23,7 +23,7 @@ export default function DemoPage() {
     <ScanResults originalText={source} result={result} documentTitle="EquiScan prepared sample" demo />
     <section className="mt-12 border-t border-line pt-8">
       <h2 className="font-serif text-3xl mb-3">Try your own walkthrough</h2>
-      <p className="text-muted mb-4">Download a synthetic text fixture, then paste its contents into the scanner. These are development examples, not clinical guidance or a validated benchmark. Live scans use AI quota and results may vary.</p>
+      <p className="text-muted mb-4">Download a synthetic text fixture, then paste its contents into the scanner. These are development examples, not clinical guidance or a validated benchmark. Live scans require sign-in and results may vary.</p>
       <ul className="space-y-2 text-sm">
         <li><a className="underline" href="/samples/generic-pronoun.txt" download>Generic pronouns — expected concern</a></li>
         <li><a className="underline" href="/samples/inclusive-instructions.txt" download>Inclusive instructions — expected no findings</a></li>

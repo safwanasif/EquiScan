@@ -2,6 +2,8 @@
 
 Snapshot: October 2, 2026, after commit 40f635a. This describes implemented behavior; future plans are identified separately.
 
+October 6 update: application quotas are removed; ai-usage.ts now only verifies authentication. Its historical quota descriptions below describe the earlier implementation. The scanner now offers a sign-in prompt with a prepared guest demo option. Chrome PDF download is owner-confirmed.
+
 ## What the product is
 
 EquiScan is a full-stack editorial review assistant for potential sex and gender bias in medical educational text. It helps a human inspect quoted passages, understand possible concerns, consider rewrites, and record decisions. It is not a medical diagnostic tool or a clinically validated bias detector.

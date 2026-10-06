@@ -20,7 +20,7 @@ flowchart LR
   Web --> PDF[React PDF: report export]
 ```
 
-The application uses Next.js 16, React 19, TypeScript, and Tailwind CSS 4. Groq requests run on the server using the configurable `GROQ_MODEL` (default `openai/gpt-oss-120b`). This is a prompted foundation-model application; no custom model has been trained. The Groq and Supabase service-role keys remain server-side. Database access depends on correctly configured row-level security.
+The application uses Next.js 16, React 19, TypeScript, and Tailwind CSS 4. Groq requests run on the server using the configurable `GROQ_MODEL` (default `openai/gpt-oss-120b`). This is a prompted foundation-model application; no custom model has been trained. The Groq key remains server-side. Application quotas were removed on request; live AI still requires authentication and provider limits still apply. Database access depends on correctly configured row-level security.
 
 ## Run locally
 
@@ -41,7 +41,6 @@ Fill in `.env.local`, then run `npm run dev` and open [localhost:3000](http://lo
 | `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED` | Enable Google button only after provider setup |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public client key, subject to database policies |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only AI quota reservations; never expose to the browser |
 
 Apply the versioned database migration before using a new Supabase project; see [database setup and verification](docs/database.md). The existing EquiScan project has already been upgraded. AI actions consume provider quota, including the current sample inputs. Stay on the Groq Free plan for free-tier testing; paid plans may incur charges. The /demo prepared sample uses no AI quota.
 

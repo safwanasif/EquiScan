@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { MAX_SCAN_CHARACTERS } from "@/lib/analysis/validate";
 import Navbar from "@/components/Navbar";
 import ScanResults from "@/components/ScanResults";
@@ -18,6 +19,7 @@ type SavedScan = {
 };
 
 export default function ScanPage() {
+  const signInDialog = useRef<HTMLDialogElement>(null);
   const [inputMode, setInputMode] = useState<InputMode>("sample");
   const [pastedText, setPastedText] = useState<string>("");
   const [selectedSample, setSelectedSample] = useState<string>(SAMPLE_DOCS[0].id);
@@ -159,6 +161,11 @@ export default function ScanPage() {
     setSaveMessage("");
 
     try {
+      const { data: { user } } = await createClient().auth.getUser();
+      if (!user) {
+        signInDialog.current?.showModal();
+        return;
+      }
       const response = await fetch("/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -166,6 +173,10 @@ export default function ScanPage() {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          signInDialog.current?.showModal();
+          return;
+        }
         const failure = await response.json().catch(() => null);
         throw new Error(failure?.error || "Analysis is unavailable. Please try again later.");
       }
@@ -202,6 +213,20 @@ export default function ScanPage() {
   return (
     <>
       <Navbar />
+      <dialog ref={signInDialog} aria-labelledby="scan-sign-in-title" aria-describedby="scan-sign-in-description"
+        className="m-auto w-[90vw] max-w-lg rounded-sm border border-line bg-paper p-7 text-ink shadow-xl backdrop:bg-black/40">
+        <h2 id="scan-sign-in-title" className="font-serif text-3xl mb-3">Ready to review your own text?</h2>
+        <p id="scan-sign-in-description" className="text-sm text-muted leading-relaxed mb-5">
+          Sign in or create a free account to run live AI scans and keep your private audit history.
+          Just exploring? Try the guest demo with prepared findings—no account needed.
+        </p>
+        <p className="text-xs text-muted mb-6">Keep a copy of pasted text before leaving this page.</p>
+        <div className="flex flex-wrap gap-3">
+          <a href="/login" className="rounded-sm bg-ink text-paper px-4 py-3 text-sm">Sign in / create account</a>
+          <a href="/demo" className="rounded-sm border border-line px-4 py-3 text-sm">Try guest demo</a>
+          <button type="button" onClick={() => signInDialog.current?.close()} className="px-3 py-3 text-sm underline">Keep editing</button>
+        </div>
+      </dialog>
       <main className="min-h-screen pb-24">
         <section className="max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -260,9 +285,7 @@ export default function ScanPage() {
 
               <div className="p-8">
                 <p className="text-sm text-muted mb-6">
-                  Live AI requires sign-in. Scans, alternative rewrites, and addenda share
-                  an allowance of 8 requests per user daily, with 20 daily across the app
-                  and one request per calendar minute. Daily limits reset at midnight UTC.
+                  Sign in to scan your own text and save private audits. Prefer to explore first?
                   {" "}<a href="/demo" className="underline">Explore the prepared demo without login.</a>
                 </p>
                 {inputMode === "sample" ? (

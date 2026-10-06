@@ -135,3 +135,9 @@ Ran a 179-character synthetic pronoun excerpt through the authenticated producti
 Production Download Report returned to its idle state without a visible error, but the in-app browser download event was not observed. Separately ran smoke-export.mjs with SMOKE_BASE_URL=https://equi-scan.vercel.app: HTTP 200, application/pdf, valid PDF header. Rendered the synthetic one-page report and visually confirmed readable layout, disclaimer, accepted decision, and rewrite. This verifies production PDF generation, not delivery through Chrome's Downloads UI or the saved-addendum report.
 
 Asked the owner to confirm the Chrome download and availability of a second Google account. These checks remain pending.
+
+## October 6: account prompt and removal of application quotas
+
+Added a native modal dialog when signed-out visitors attempt a live scan. It offers sign-in/account creation, the prepared guest demo, or Keep editing. The client verifies auth before submitting text; server routes independently enforce authentication. Browser verified the prompt and return to the unchanged sample editor. Live anonymous inference is not enabled.
+
+Removed application daily and minute caps at the owner's request. Scan/rewrite/addendum now verify the session without calling reserve_ai_request; provider limits still apply. Historical quota SQL remains unused. Service-role configuration is no longer needed for this flow. Build, lint, and five tests passed. Owner also confirmed Chrome PDF download and that the website Demo navigation works.
