@@ -149,3 +149,7 @@ Implemented explicit finding notes, saved-note inclusion in PDF report payloads,
 Added account-only revised-text preview with individual suggested edit selections, separate original/revised columns, undo-all, and plain-text download. Drafts are temporary; original audit text/status are unchanged. Missing, repeated or overlapping source quotations are rejected. Two meaningful edit tests pass; seven tests total, lint and production build pass. Browser verification remains pending. Guest demo has neither notes nor revised text export.
 
 Reviewer-note migration was applied by the owner and showed success on October 6. Rollback-only SQL test 006 passed own save/clear, length enforcement, unchanged status, Trash and cross-user denial. Local authenticated browser saved an 83-character synthetic rationale on the production smoke fixture and reloaded the same note successfully. Revised-text selection and undo were verified in the local browser. PDF note layout and actual revised-text download remain unverified; deployment of these features is next.
+
+## October 6: deployed feature inspection
+
+Production audit page serves the reviewer-note field and revised-text preview after deployment 456da8b. Existing saved synthetic rationale loaded correctly. Selecting one suggested edit changed only the revised preview; original content stayed unchanged. This check did not perform a fresh production note write or observe revised-text download. Feature-roadmap.md now separates shipped work from planned features and remaining verification.

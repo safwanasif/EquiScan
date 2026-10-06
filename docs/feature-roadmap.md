@@ -2,6 +2,19 @@
 
 Updated October 6, 2026. Recommendations, not implemented features unless stated.
 
+## Implementation status
+
+| Feature | Current state | Remaining verification or scope |
+| --- | --- | --- |
+| Reviewer notes | Implemented and deployed; restricted migration applied; SQL permissions tested; saved note loads in production | PDF layout with long notes and fresh production note write |
+| Before/after draft preview | Implemented and deployed; edit selection works in production; undo tested locally | Actual revised-text browser download; word-level highlighting and persistent draft versions are not implemented |
+| PDF source navigation | Planned | Current PDF page selection exists, but findings have no persisted page/offset mapping |
+| Audit version comparison | Planned | No linked revisions or finding comparison yet |
+| Evaluation dashboard | Planned | Existing tiny synthetic cases are development checks, not a reviewed benchmark |
+| Tags and favourites | Planned | Existing title search and finding filters remain available |
+
+Guest restrictions are implemented. Guest/account comparison and sign-in prompt are implemented. Application quotas are removed; provider limits still apply.
+
 ## Guest and account contract
 
 Guest mode is a prepared preview: one fixed synthetic audit, temporary review decisions, sample JSON and text downloads. It has no live inference, private audit storage, generated addenda or PDF audit export. These restrictions follow the demo component and authenticated server routes, not a browser-only counter. A free account enables personal excerpts/PDF selections, private saved reviews, alternative rewrites, saved editorial addenda and PDF reports. Application usage caps were removed on request; provider limits still apply.

@@ -1,10 +1,10 @@
 # EquiScan
 
-An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages and suggested rewrites. Save audits, record review decisions, generate a draft addendum, and export a PDF report.
+An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages and suggested rewrites. Save audits, record review decisions and reviewer notes, preview selected edits in a separate revised draft, generate a draft addendum, and export a PDF report.
 
-**Status: deployed v1 candidate.** [Live app](https://equi-scan.vercel.app) · [Prepared recruiter demo](https://equi-scan.vercel.app/demo). Production public-route smoke checks, Google sign-in, and saved audit/addendum loading were verified October 5, 2026. Fresh production inference, automatic saving, review persistence, and renaming also passed. Browser PDF download and second-account production checks remain. Live scan/save/review was verified locally; database isolation has separate rollback-only SQL tests.
+**Status: deployed v1 candidate.** [Live app](https://equi-scan.vercel.app) · [Prepared recruiter demo](https://equi-scan.vercel.app/demo). Production public-route smoke checks, Google sign-in, and saved audit/addendum loading were verified October 5, 2026. Fresh production inference, automatic saving, review persistence, and renaming also passed. Chrome PDF download is owner-confirmed; second-account production checks remain. Live scan/save/review was verified locally; database isolation has separate rollback-only SQL tests.
 
-See the [v1 roadmap](ROADMAP.md), [release checklist](docs/release-checklist.md), and [demo and engineering guide](docs/portfolio.md).
+See the [feature implementation status](docs/feature-roadmap.md), [v1 roadmap](ROADMAP.md), [release checklist](docs/release-checklist.md), and [demo and engineering guide](docs/portfolio.md).
 
 For a quick walkthrough, open `/demo`: its prepared results require no login, database, or model call. Downloadable synthetic text fixtures are included. Follow the [recruiter demo script](docs/demo-script.md), [sample attribution](docs/attribution.md), and [evaluation notes](evaluation/README.md).
 
