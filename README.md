@@ -2,7 +2,7 @@
 
 An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages and suggested rewrites. Save audits, record review decisions, generate a draft addendum, and export a PDF report.
 
-**Status: deployed v1 candidate.** [Live app](https://equi-scan.vercel.app) · [Prepared recruiter demo](https://equi-scan.vercel.app/demo). Production public-route smoke checks, Google sign-in, and saved audit/addendum loading were verified October 5, 2026. Fresh production inference, browser PDF download, and second-account production checks remain. Live scan/save/review was verified locally; database isolation has separate rollback-only SQL tests.
+**Status: deployed v1 candidate.** [Live app](https://equi-scan.vercel.app) · [Prepared recruiter demo](https://equi-scan.vercel.app/demo). Production public-route smoke checks, Google sign-in, and saved audit/addendum loading were verified October 5, 2026. Fresh production inference, automatic saving, review persistence, and renaming also passed. Browser PDF download and second-account production checks remain. Live scan/save/review was verified locally; database isolation has separate rollback-only SQL tests.
 
 See the [v1 roadmap](ROADMAP.md), [release checklist](docs/release-checklist.md), and [demo and engineering guide](docs/portfolio.md).
 

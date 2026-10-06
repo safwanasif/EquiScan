@@ -127,3 +127,11 @@ The owner deployed through Vercel after entering environment variables. Producti
 Approved Supabase Site URL https://equi-scan.vercel.app was saved and confirmed after reload. Exact production and localhost /auth/callback URLs remain allowed. Production Google login reached the authenticated workspace and loaded both existing audits. The synthetic audit reopened with source, finding, status, and saved 64-word addendum. This verifies persistence, not fresh inference or clinical validity.
 
 Remaining: fresh production scan/save/review, actual browser PDF download, second-account production login/isolation, broader keyboard/accessibility checks, and portfolio recording. Repository remains private. See deployment.md for recovery guidance.
+
+## October 5: fresh production workflow and export API
+
+Ran a 179-character synthetic pronoun excerpt through the authenticated production scan form. Live inference returned two exact-source PRONOUN_DEFAULT findings and score 4/10; automatic saving created audit f927d0ff-4270-42ee-932f-6fb3878ff93a. Accepted one finding, returned to the workspace, and reopened the audit: one of two reviewed persisted. Renamed it Production smoke test — synthetic pronouns and confirmed the title after reload. This is a workflow fixture, not a stable expected score or clinical evaluation.
+
+Production Download Report returned to its idle state without a visible error, but the in-app browser download event was not observed. Separately ran smoke-export.mjs with SMOKE_BASE_URL=https://equi-scan.vercel.app: HTTP 200, application/pdf, valid PDF header. Rendered the synthetic one-page report and visually confirmed readable layout, disclaimer, accepted decision, and rewrite. This verifies production PDF generation, not delivery through Chrome's Downloads UI or the saved-addendum report.
+
+Asked the owner to confirm the Chrome download and availability of a second Google account. These checks remain pending.

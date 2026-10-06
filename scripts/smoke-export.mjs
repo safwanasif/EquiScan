@@ -1,4 +1,4 @@
-// Local export integration check; creates only ignored files, no provider calls.
+// Export integration check; creates only ignored files, no provider calls.
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 const originalText = 'Every patient should bring his medication list to the appointment.';
@@ -7,7 +7,8 @@ const result = {
   flags: [{ id: 'flag-1', flaggedSentence: originalText, category: 'PRONOUN_DEFAULT', severity: 2,
     explanation: 'Generic instructions use male pronouns.', suggestedRewrite: 'Every patient should bring their medication list to the appointment.' }],
 };
-const response = await fetch('http://localhost:3000/api/export-pdf', {
+const baseUrl = process.env.SMOKE_BASE_URL || 'http://localhost:3000';
+const response = await fetch(new URL('/api/export-pdf', baseUrl), {
   method: 'POST', headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ originalText, result, documentTitle: 'Synthetic review export test', reviewDecisions: { 'flag-1': 'accepted' } }),
 });
