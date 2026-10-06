@@ -23,7 +23,7 @@ Updated October 6, 2026. Historical evidence is in verification.md; future scope
 - [ ] Second Google account production login and guessed-audit denial through the browser (database tests pass).
 - [ ] Actual revised-text file download verified in a regular browser.
 - [ ] Comprehensive keyboard/screen-reader and device coverage.
-- [ ] Final deployment of latest polish inspected.
+- [x] Final deployment of latest polish inspected; production HTTP smoke checks passed.
 - [ ] Short demo recording and public repository decision.
 
 ## Deliberate scope decisions
