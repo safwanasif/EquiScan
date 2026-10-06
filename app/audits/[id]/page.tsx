@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import SavedAuditReview from "@/components/SavedAuditReview";
 import AuditTrashButton from "@/components/AuditTrashButton";
 import AuditTitleEditor from "@/components/AuditTitleEditor";
+import AuditRevisionHistory from "@/components/AuditRevisionHistory";
 import { createClient } from "@/lib/supabase/server";
 import { validateScanResult, validateAddendum } from "@/lib/analysis/validate";
 
@@ -57,5 +58,6 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     <p className="text-muted mb-8">Original findings and saved review decisions. Reopening does not run a new analysis. Additional rewrites are generated on demand and are not saved with this audit.</p>
     <SavedAuditReview key={id} scanId={id} originalText={document.raw_text} result={result} documentTitle={document.title}
       flagIdMap={flagIdMap} initialStatuses={initialStatuses} initialNotes={initialNotes} initialAddendum={initialAddendum} />
+    <AuditRevisionHistory scanId={id} original={result} />
   </main></>;
 }

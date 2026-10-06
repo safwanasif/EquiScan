@@ -477,6 +477,7 @@ export default function ScanPage() {
               addendum={addendum}
               documentTitle={analyzedTitle}
               flagIdMap={savedScan?.flagIdMap}
+              scanId={savedScan?.scanId}
             />
 
             <AddendumPanel

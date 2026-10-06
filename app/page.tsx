@@ -1,4 +1,4 @@
-﻿import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import AnimatedDocument from "@/components/AnimatedDocument";
 import Link from "next/link";
 import { CATEGORY_LIST } from "@/data/biasCategories";
@@ -29,9 +29,7 @@ export default function Home() {
                 </h1>
 
                 <p className="text-lg lg:text-xl text-muted leading-relaxed mb-10 max-w-xl">
-                  EquiScan reads medical papers, textbook chapters, and
-                  curricula to surface gender bias, then generates the content
-                  that should have been there.
+                  EquiScan reviews medical educational excerpts for potential sex and gender bias, with quoted findings and draft edits for human review.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-6">
@@ -62,7 +60,7 @@ export default function Home() {
               <div className="flex flex-wrap items-center justify-between gap-6 font-mono text-[11px] tracking-widest text-muted uppercase">
                 <span>Built on Groq</span>
                 <span className="hidden md:inline">-</span>
-                <span>8-second analysis</span>
+                <span>Source-linked findings</span>
                 <span className="hidden md:inline">-</span>
                 <span>5 bias categories and 3 rewrite modes</span>
                 <span className="hidden md:inline">-</span>
@@ -128,7 +126,7 @@ export default function Home() {
                 </h3>
                 <p className="text-sm text-ink/80 leading-relaxed">
                   Five bias categories, severity scoring, and a letter grade
-                  across the whole document.
+                  within the selected excerpt.
                 </p>
               </div>
 
@@ -141,8 +139,7 @@ export default function Home() {
                   Rewrite with context.
                 </h3>
                 <p className="text-sm text-ink/80 leading-relaxed">
-                  Every flagged sentence comes with three rewrite options, from
-                  conservative edits to comprehensive revisions.
+                  Each finding includes a suggested edit. Generate alternative drafts on demand and review them in context.
                 </p>
               </div>
 

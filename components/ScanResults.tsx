@@ -29,6 +29,7 @@ interface Props {
   demo?: boolean;
   initialStatuses?: StatusMap;
   initialNotes?: Record<string, string>;
+  scanId?: string;
 }
 
 const GRADE_COLORS: { [key: string]: { bg: string; text: string } } = {
@@ -48,6 +49,7 @@ export default function ScanResults({
   demo = false,
   initialStatuses = {},
   initialNotes = {},
+  scanId,
 }: Props) {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const passageRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -536,7 +538,7 @@ export default function ScanResults({
           </div>
         </div>
       </div>
-      {!demo && result.flags.length > 0 ? <div className="lg:col-span-3"><RevisionPreview source={originalText} result={result} /></div> : null}
+      {!demo && result.flags.length > 0 ? <div className="lg:col-span-3"><RevisionPreview source={originalText} result={result} scanId={scanId} /></div> : null}
     </div>
   );
 }

@@ -12,7 +12,7 @@ export default function SavedAuditReview({ scanId, originalText, result, documen
 }) {
   const [addendum, setAddendum] = useState(initialAddendum);
   return <>
-    <ScanResults originalText={originalText} result={result} documentTitle={documentTitle} flagIdMap={flagIdMap} initialStatuses={initialStatuses} initialNotes={initialNotes} addendum={addendum} />
+    <ScanResults originalText={originalText} result={result} documentTitle={documentTitle} flagIdMap={flagIdMap} initialStatuses={initialStatuses} initialNotes={initialNotes} addendum={addendum} scanId={scanId} />
     <AddendumPanel originalText={originalText} scanResult={result} addendum={addendum} setAddendum={setAddendum} scanId={scanId} />
   </>;
 }

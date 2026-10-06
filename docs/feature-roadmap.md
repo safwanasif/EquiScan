@@ -9,7 +9,7 @@ Updated October 6, 2026. Recommendations, not implemented features unless stated
 | Reviewer notes | Implemented and deployed; restricted migration applied; SQL permissions tested; saved note loads in production | Long-note PDF layout verified; fresh production note write remains |
 | Before/after draft preview | Implemented and deployed; edit selection works in production; undo tested locally | Actual revised-text browser download; word-level highlighting and persistent draft versions are not implemented |
 | PDF source navigation | Extracted-text passage jump implemented locally; original PDF mapping planned | Findings still have no persisted PDF page/offset mapping |
-| Audit version comparison | Planned | No linked revisions or finding comparison yet |
+| Audit version comparison | Implemented locally; private snapshots, linked rescans and comparison tested | Production deployment verification remains; matching is exact quote/category only |
 | Evaluation dashboard | Planned | Existing tiny synthetic cases are development checks, not a reviewed benchmark |
 | Tags and favourites | Planned | Existing title search and finding filters remain available |
 

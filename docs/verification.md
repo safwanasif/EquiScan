@@ -160,3 +160,11 @@ Added Go to passage in analyzed text to expanded findings, with scrolling and ke
 
 Widened the revised draft editor to span the desktop review grid. Production export smoke check with a 1,740-character synthetic reviewer note returned a valid PDF. Both pages were rendered and inspected: note, review decision and rewrite readable, with no clipping. The entire finding moves to page two and leaves whitespace on page one; more complex report layouts remain untested.
 Local browser verified Go to passage moves keyboard focus to the matching source highlight. Lint and production build passed.
+
+## October 6: saved revision implementation (database setup pending)
+
+Added immutable draft snapshots and atomic revised-audit creation/linking using save_audit_revision. The signed-in caller retains RLS enforcement; source parent and new audit remain separate. Added account UI for Save draft snapshot and Rescan and save comparison; server history shows latest 20 versions, saved text, child audit links and exact quote/category comparisons. Changed text may appear in both new and no-longer-reported groups; no claim of clinical improvement. Guest mode has no revision features.
+
+Eight tests pass, including comparison matching. Migration 202610060002 and rollback-only test 007 are prepared but not applied/run. End-to-end save/rescan and permission verification await database approval. Earlier roadmap feature status remains unchanged until verification.
+
+Revision migration was applied by the owner and returned success. SQL test 007 passed draft/rescan creation, original preservation, invalid text, Trash, cross-user and anonymous denial. Browser saved a draft snapshot and then ran a live rescan of the synthetic edited excerpt. Both persisted after reload; linked child audit 438098a5-daf0-447b-9d57-3b06a2d09728 had zero findings and comparison showed two no longer reported. This is one workflow check, not evaluation evidence. Eight tests, lint and build passed. Removed remaining landing promises of eight-second analysis, whole-document grading and automatic three-rewrite availability.
