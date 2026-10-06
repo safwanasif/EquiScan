@@ -85,7 +85,7 @@ export default function ScanPage() {
 
     if (!response.ok) {
       setSaveMessage(response.status === 401
-        ? "Not saved. Sign in before your next scan to save it to your workspace. You can still download this report."
+        ? "Not saved. Sign in before your next scan to save it to your audit library. You can still download this report."
         : "Analysis complete, but saving failed. Download your report to keep a copy.");
       return null;
     }
@@ -186,7 +186,7 @@ export default function ScanPage() {
       setScanResult(data);
       setAnalyzedText(text);
 
-      setSaveMessage("Saving to workspace...");
+      setSaveMessage("Saving to your audit library...");
       // Persistence failures must not turn a successful analysis into a scan error.
       try {
         const saved = await saveScanToDatabase(text, data);
@@ -454,7 +454,7 @@ export default function ScanPage() {
               <div>
                 {savedScan ? (
                   <p className="text-xs font-mono tracking-widest uppercase text-muted">
-                    Saved to workspace
+                    Saved to your audit library
                   </p>
                 ) : (
                   <p role="status" className="text-sm text-muted max-w-xl">

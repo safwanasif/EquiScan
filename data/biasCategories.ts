@@ -20,15 +20,15 @@ export const BIAS_CATEGORIES: Record<BiasCategory, BiasCategoryDefinition> = {
     shortLabel: "Male Default",
     color: "bg-red-100 text-red-800 border-red-300",
     description:
-      "A clinical case or example uses a male patient as the 'standard,' implying that diagnosis in women follows the same pattern.",
+      "The excerpt explicitly treats a male case as representative of everyone. A case about an individual man is not itself evidence of bias.",
     whyItMatters:
-      "Teaching medicine with male-default cases trains clinicians to recognize male symptom patterns and miss or dismiss atypical presentations in women.",
+      "Review universal claims against their stated population and evidence.",
     examples: [
       {
         biased:
-          "A 55-year-old man presents with crushing substernal chest pain radiating down his left arm. He is immediately evaluated for acute myocardial infarction.",
+          "This male example represents every patient; no other presentation needs to be considered.",
         improved:
-          "A 55-year-old patient presents with chest discomfort. Note that men more often report crushing substernal pain, while women may present with fatigue, nausea, jaw pain, or shortness of breath. Both presentations warrant immediate evaluation for acute myocardial infarction.",
+          "This example describes one patient. Do not assume it represents every patient or presentation.",
       },
     ],
   },
@@ -39,15 +39,15 @@ export const BIAS_CATEGORIES: Record<BiasCategory, BiasCategoryDefinition> = {
     shortLabel: "Missing Female Symptoms",
     color: "bg-orange-100 text-orange-800 border-orange-300",
     description:
-      "The text describes symptoms of a condition but omits how those symptoms differ in women.",
+      "The excerpt explicitly claims a single symptom pattern applies universally. Missing detail alone is insufficient to establish bias.",
     whyItMatters:
-      "Over 50% of women having heart attacks present with symptoms not listed in traditional textbooks. This omission is directly responsible for diagnostic delays.",
+      "Review universal symptom claims without inventing medical details missing from the excerpt.",
     examples: [
       {
         biased:
-          "Symptoms of myocardial infarction include chest pain, pain radiating to the left arm, and shortness of breath.",
+          "Every patient has exactly the same symptoms; differences between populations never matter.",
         improved:
-          "Symptoms of myocardial infarction commonly include chest pain, pain radiating to the left arm, and shortness of breath. Women are more likely than men to present with atypical symptoms including fatigue, nausea, jaw pain, back pain, and dyspnea without chest pain.",
+          "Avoid universal symptom claims without supporting evidence. Verify relevant population differences against appropriate sources.",
       },
     ],
   },
@@ -79,13 +79,13 @@ export const BIAS_CATEGORIES: Record<BiasCategory, BiasCategoryDefinition> = {
     description:
       "Symptoms in women are attributed to stress, anxiety, or emotional causes before physiological causes are investigated.",
     whyItMatters:
-      "Women are significantly more likely than men to have physical symptoms misattributed to mental health causes, leading to dangerous diagnostic delays.",
+      "A reviewer should inspect unsupported sex-based dismissal; an appropriate mental-health assessment is not automatically bias.",
     examples: [
       {
         biased:
-          "Women presenting with unexplained chronic pain should be screened for anxiety and depression.",
+          "Because she is a woman, her unexplained pain must be anxiety; no further investigation is needed.",
         improved:
-          "All patients presenting with chronic pain deserve thorough physiological evaluation. Mental health screening may be appropriate after physical causes have been adequately investigated.",
+          "Do not infer the cause of symptoms from a patient's sex. Review the assessment and supporting evidence.",
       },
     ],
   },
@@ -96,15 +96,15 @@ export const BIAS_CATEGORIES: Record<BiasCategory, BiasCategoryDefinition> = {
     shortLabel: "Missing Sex Data",
     color: "bg-blue-100 text-blue-800 border-blue-300",
     description:
-      "Dosing guidelines, drug efficacy, or disease prevalence statistics are presented without sex-based breakdowns, despite known biological differences.",
+      "The excerpt explicitly dismisses sex-specific evidence. Absence of a breakdown in a short excerpt alone does not establish a concern.",
     whyItMatters:
-      "Women experience adverse drug reactions at twice the rate of men across many medications, largely due to dosing standards based on male physiology.",
+      "Review explicit dismissal of relevant evidence; do not generate dose changes from missing context.",
     examples: [
       {
         biased:
-          "The recommended adult dose is 500 mg twice daily.",
+          "Sex-specific study results should always be ignored when interpreting the evidence.",
         improved:
-          "The recommended adult dose is 500 mg twice daily. Note that sex-based differences in metabolism may warrant dose adjustment; refer to pharmacokinetic data for sex-specific recommendations.",
+          "Consider relevant study populations and evidence. Do not dismiss sex-specific results without justification.",
       },
     ],
   },

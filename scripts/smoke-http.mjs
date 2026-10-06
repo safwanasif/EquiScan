@@ -35,6 +35,8 @@ const invalidReport = await fetch(new URL('/api/export-pdf', base), {
 assert.equal(invalidReport.status, 400);
 const source = 'Every patient should discuss his concerns with the clinician before treatment.';
 const liveRequests = [
+  ['/api/reviewer-note', { flagId: '00000000-0000-4000-8000-000000000001', note: 'Synthetic note' }],
+  ['/api/audit-revision', { parentScanId: '00000000-0000-4000-8000-000000000001', text: source }],
   ['/api/scan', { text: source }],
   ['/api/rewrite', { flaggedSentence: source, category: 'PRONOUN_DEFAULT' }],
   ['/api/addendum', { originalText: source, scanResult: {

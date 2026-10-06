@@ -97,7 +97,7 @@ export default function Home() {
               </h2>
               <p className="text-lg text-muted leading-relaxed">
                 Four steps. Text is processed by Groq. Signed-in scans are
-                saved to your workspace.
+                saved to your audit library.
               </p>
             </div>
 
@@ -230,11 +230,10 @@ export default function Home() {
               On the scale of the problem
             </p>
             <blockquote className="font-serif text-4xl lg:text-6xl leading-[1.15] italic tracking-tight">
-              It took until 2004 for the first American textbook on
-              gender-specific medicine to be released.
+              Good editorial review starts with the source—and keeps human judgment in the loop.
             </blockquote>
             <p className="mt-10 font-mono text-xs tracking-widest text-paper/60 uppercase">
-              Legato, M. Principles of Gender-Specific Medicine, 2004
+              Inspect evidence. Review suggestions. Preserve the original.
             </p>
           </div>
         </section>

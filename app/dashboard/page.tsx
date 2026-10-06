@@ -89,10 +89,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <main className="min-h-screen">
           <section className="max-w-7xl mx-auto px-6 lg:px-10 pt-12 pb-8">
             <h1 className="font-serif text-5xl tracking-tight mb-4">
-              No workspace found.
+              Your audit library is unavailable.
             </h1>
             <p className="text-muted">
-              Sign out and sign back in, or create a workspace in Supabase.
+              Please sign out and sign back in. If the problem continues, try again later.
             </p>
           </section>
         </main>
@@ -155,10 +155,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-rose" />
-                <span className="section-label">Workspace</span>
+                <span className="section-label">My audits</span>
               </div>
               <h1 className="font-serif text-5xl lg:text-6xl tracking-tight leading-tight mb-3">
-                Your workspace
+                My audits
               </h1>
               <p className="text-muted text-lg">Your saved audits and review progress, all in one place.</p>
             </div>
@@ -221,7 +221,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <button className="self-end bg-ink text-paper px-5 py-3 rounded-sm">Search</button>
               {search ? <Link href="/dashboard" className="self-end py-3 text-rose underline">Clear</Link> : null}
             </form>
-            {search ? <p className="text-sm text-muted mb-4">Matching “{search}”. Workspace totals include all active audits.</p> : null}
+            {search ? <p className="text-sm text-muted mb-4">Matching “{search}”. Library totals include all active audits.</p> : null}
             {documentsWithScans.filter(document => document.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())).length > 0 ? (
               <div className="space-y-4">
                 {documentsWithScans.filter(document => document.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())).map((document) => (

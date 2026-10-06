@@ -29,3 +29,5 @@ Callback failures now show recovery instructions; callback success always goes
 to the dashboard. No user-controlled destination is needed for this flow.
 
 Reference: [Supabase Google setup](https://supabase.com/docs/guides/auth/social-login/auth-google).
+
+October 6 status: production Site URL and exact callbacks are configured; owner Google login verified. Second-account browser login and consent-audience verification remain incomplete. The scanner prompts guests to sign in or use the prepared demo.

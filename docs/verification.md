@@ -174,3 +174,11 @@ Revision migration was applied by the owner and returned success. SQL test 007 p
 Production audit reopened with saved revision history and snapshot/rescan controls. Local /evaluation page verified without an account: displays four synthetic development fixtures, historical observations, source-grounding and database test descriptions, and missing evaluation coverage. It explicitly rejects interpreting tuned smoke cases as held-out accuracy. Route bypasses auth refresh just like /demo, and has no AI call. Lint and production build passed. This is an evidence page, not completion of a representative evaluation benchmark.
 
 Prepared docs/recruiter-walkthrough.md with demo sequence, frontend/backend explanation and accurate resume wording; planned PDF page mapping and remaining verification are disclosed.
+
+## October 6: portfolio release polish
+
+Aligned category examples with supported excerpt-based boundaries; removed unsupported medical statistics, dose suggestions and missing-context bias claims. Changed user-facing navigation to My audits, improved library failure and note-save recovery copy, and removed unsupported historical landing copy. Save API now applies the same 8,000-character and source-grounded output validation as analysis before calling the atomic transaction.
+
+Patched source-map-js after npm audit reported a new high advisory. Production npm audit now reports zero; five development-tool advisories remain. Final lint, all eight tests, build and local HTTP checks pass. HTTP checks now include anonymous reviewer-note and revision rejection. Guest demo and its evaluation link verified in browser with no account; at 1280px viewport the demo had no horizontal overflow. Comprehensive device/screen-reader coverage is not claimed.
+
+Current roadmap, release checklist, portfolio and recruiter guide updated. Scope is frozen for the STEM fair: original PDF coordinate mapping, tags/favourites and representative clinically reviewed evaluation remain future work. Full second-account production browser testing and actual revised-text download remain owner-assisted verification gaps.

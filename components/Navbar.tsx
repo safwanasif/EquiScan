@@ -29,7 +29,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link prefetch={false} href="/demo" className="text-sm text-muted hover:text-ink transition-colors">Demo</Link>
           <Link prefetch={false} href="/dashboard" className="text-sm text-muted hover:text-ink transition-colors">
-            Workspace
+            My audits
           </Link>
           <Link prefetch={false}
             href="/scan"

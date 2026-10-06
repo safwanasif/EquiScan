@@ -28,7 +28,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
   if (!documentQuery.data) notFound();
   const document = documentQuery.data;
   if (document.deleted_at) return <><Navbar /><main className="max-w-3xl mx-auto px-6 py-12">
-    <Link href="/dashboard" className="text-sm text-rose">← Back to workspace</Link>
+    <Link href="/dashboard" className="text-sm text-rose">← Back to my audits</Link>
     <h1 className="font-serif text-4xl my-6">This audit is in Trash.</h1>
     <p className="text-muted mb-6">Restore it to continue reviewing {document.title}. Its source and review decisions are still stored.</p>
     <AuditTrashButton documentId={scan.document_id} restore />
@@ -51,7 +51,7 @@ export default async function AuditPage({ params }: { params: Promise<{ id: stri
     initialStatuses[localId] = row.status as "open" | "accepted" | "resolved" | "dismissed";
   });
   return <><Navbar /><main className="max-w-6xl mx-auto px-6 py-12">
-    <Link href="/dashboard" className="text-sm text-rose">← Back to workspace</Link>
+    <Link href="/dashboard" className="text-sm text-rose">← Back to my audits</Link>
     <p className="section-label mt-8 mb-3">Saved audit</p>
     <h1 className="font-serif text-4xl mb-4 break-words">{document.title}</h1>
     <div className="mb-5 flex flex-wrap gap-5"><AuditTitleEditor documentId={scan.document_id} title={document.title} /><AuditTrashButton documentId={scan.document_id} /></div>

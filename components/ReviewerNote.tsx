@@ -11,7 +11,7 @@ export default function ReviewerNote({ flagId, initialNote, onSaved }: { flagId:
       const response = await fetch("/api/reviewer-note", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ flagId, note }) });
       if (!response.ok) throw new Error();
       setSaved(note); onSaved(note); setMessage("Reviewer note saved.");
-    } catch { setMessage("Could not save the note. Keep a copy and try again; database setup may still be pending."); }
+    } catch { setMessage("Could not save the note. Your edits are still here; keep a copy and try again."); }
     finally { setBusy(false); }
   };
   return <div className="mt-5">

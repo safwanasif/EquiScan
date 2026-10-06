@@ -1,36 +1,31 @@
 # EquiScan release checklist
 
-The [v1 roadmap](../ROADMAP.md) defines scope. Check items only when supporting verification exists.
+Updated October 6, 2026. Historical evidence is in verification.md; future scope is in feature-roadmap.md.
 
-## Baseline
+## Completed
 
-- [x] Inspect prototype and research context.
-- [x] Verify lint, TypeScript, and production build on October 1, 2026.
-- [x] Preserve prototype in local Git history.
-- [x] Replace starter README and add environment setup documentation.
-- [x] Migrate session refresh to proxy.ts; verify sample analysis and unsigned-in workspace redirect. See [verification notes](verification.md).
+- [x] Vercel deployment and production Google sign-in.
+- [x] Live production scan, automatic save, reopen and review persistence.
+- [x] Runtime request/output validation, exact source quotes and derived counts/grades.
+- [x] Atomic audit persistence and rollback-only database isolation tests.
+- [x] Recoverable Trash, rename and title search.
+- [x] Reviewer notes and saved addenda; notes included in exports.
+- [x] Revised-text preview, conflict rejection, undo and snapshots.
+- [x] Linked rescans and exact-quote/category comparisons.
+- [x] Public prepared demo and account/guest distinction.
+- [x] Public evaluation evidence page, clearly limited to development cases.
+- [x] PDF API rendering verified, including a long note; Chrome report download owner-confirmed.
+- [x] Lint, production build, automated tests, HTTP checks and CI configuration.
+- [x] Deployment recovery documentation and recruiter walkthrough.
 
-## Before deployment
+## Remaining evidence gaps
 
-- [x] Inspect restored schema and apply a versioned, data-preserving upgrade; see [database verification](database.md).
-- [ ] Verify real login, workspace provisioning, and two-user isolation.
-- [ ] Validate requests and model outputs; unify grading and counts.
-- [ ] Verify citations and correct unsupported claims.
-- [ ] Fix PDF text boundaries and disclose analyzed coverage.
-- [x] Make saving atomic and connect persisted flag IDs to review controls; database tests pass, browser verification pending.
-- [ ] Reopen and delete saved audits; preserve report content.
-- [ ] Add visible error recovery and a precomputed visitor demo.
-- [ ] Protect paid endpoints with durable quotas and spending safeguards.
-- [ ] Correct privacy copy and verify retention/deletion behavior.
-- [ ] Verify desktop/mobile, keyboard use, and rendered PDF reports.
-- [ ] Add regression tests and CI.
-- [ ] Review dependency security.
+- [ ] Second Google account production login and guessed-audit denial through the browser (database tests pass).
+- [ ] Actual revised-text file download verified in a regular browser.
+- [ ] Comprehensive keyboard/screen-reader and device coverage.
+- [ ] Final deployment of latest polish inspected.
+- [ ] Short demo recording and public repository decision.
 
-## Deployment and portfolio
+## Deliberate scope decisions
 
-- [ ] Select hosting after checking current upload and execution limits.
-- [ ] Configure production secrets, auth redirects, and database policies.
-- [ ] Verify the live workflow, failure recovery, and account isolation.
-- [ ] Record deployment evidence and a recovery procedure.
-- [ ] Add actual screenshots and a short demo recording.
-- [ ] Publish the repository when ready and write accurate resume bullets.
+No clinical validation, representative accuracy benchmark, OCR or original PDF coordinate mapping is claimed. Application quotas are removed at the owner's request; provider limits remain. Existing legacy quota migrations are historical and unused. Production dependency audit was previously clean; development lint dependency findings were documented.

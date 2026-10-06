@@ -213,3 +213,7 @@ Future capabilities, not implemented: OCR, large-book storage/background scannin
 The prepared demo works without Groq or Supabase. Live features still depend on those services; Supabase Free can pause with low activity, provider models/limits can change, and a free service is not guaranteed forever. Deployment recovery is documented, not yet exercised on a public host.
 
 Accurate framing: built a Next.js/TypeScript editorial review application with hosted LLM inference, validated source-linked findings, PostgreSQL RLS, transactional persistence, human review workflows, saved drafts, reports and durable AI quotas. Do not claim a trained model, clinical accuracy, medically verified citations, whole-textbook analysis or a live public deployment until supported.
+
+## October 6 final implementation update
+
+Current status and remaining checks supersede the earlier snapshot above: see release-checklist.md and recruiter-walkthrough.md. Deployment, production callbacks and owner-confirmed Chrome PDF reports are complete. Application quota reservations are removed. New files: ReviewerNote.tsx, RevisionPreview.tsx and AuditRevisionHistory.tsx; api/reviewer-note and api/audit-revision; analysis/edits.ts and analysis/comparison.ts; tests/edits.test.mjs and comparison.test.mjs; migrations/tests for notes and revisions; app/evaluation/page.tsx. My audits is the user-facing library name; database workspaces remain internal.

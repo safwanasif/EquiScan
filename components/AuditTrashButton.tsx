@@ -22,7 +22,7 @@ export default function AuditTrashButton({ documentId, restore = false }: { docu
     } finally { setBusy(false); }
   };
   return <div className="text-sm">
-    {confirming ? <div className="space-y-2"><p>Move this audit to Trash? You can restore it from your workspace.</p>
+    {confirming ? <div className="space-y-2"><p>Move this audit to Trash? You can restore it from your audit library.</p>
       <button disabled={busy} onClick={submit} className="underline mr-4 disabled:opacity-40">{busy ? "Moving…" : "Move to Trash"}</button>
       <button disabled={busy} onClick={() => setConfirming(false)} className="underline">Cancel</button>
     </div> : <button disabled={busy} onClick={() => restore ? submit() : setConfirming(true)} className="underline underline-offset-4 disabled:opacity-40">{busy ? "Restoring…" : restore ? "Restore audit" : "Move to Trash"}</button>}

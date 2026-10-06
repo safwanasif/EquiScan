@@ -448,7 +448,7 @@ export default function ScanResults({
 
                         {status !== "open" ? (
                           <div className="mt-3"><p className="text-xs text-muted">
-                            Marked as {status}. {demo ? "Example decision only; not saved online." : "Refresh dashboard to update workspace metrics."}
+                            Marked as {status}. {demo ? "Example decision only; not saved online." : "Your audit library reflects saved review decisions."}
                           </p><button onClick={() => updateFlagStatus(flag, "open")} disabled={isUpdating || (!demo && !flagIdMap[flag.id])} className="text-xs underline underline-offset-4 mt-2 disabled:opacity-40">Reopen finding</button></div>
                         ) : null}
                       </div>
