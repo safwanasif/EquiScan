@@ -1,5 +1,7 @@
 # EquiScan
 
+[![Checks](https://github.com/safwanasif/EquiScan/actions/workflows/checks.yml/badge.svg)](https://github.com/safwanasif/EquiScan/actions/workflows/checks.yml)
+
 An AI-assisted review tool for potential sex and gender bias in medical educational content. Upload a PDF, paste text, or choose a sample to inspect flagged passages and suggested rewrites. Save audits, record review decisions and reviewer notes, preview selected edits in a separate revised draft, generate a draft addendum, and export a PDF report.
 
 **Status: deployed v1 candidate.** [Live app](https://equi-scan.vercel.app) · [Prepared recruiter demo](https://equi-scan.vercel.app/demo). Production public-route smoke checks, Google sign-in, and saved audit/addendum loading were verified October 5, 2026. Fresh production inference, automatic saving, review persistence, and renaming also passed. Chrome PDF download is owner-confirmed; second-account production checks remain. Live scan/save/review was verified locally; database isolation has separate rollback-only SQL tests.
@@ -58,7 +60,7 @@ node scripts/smoke-http.mjs
 node scripts/smoke-export.mjs
 ```
 
-The build requires network access for Google Fonts. Session refresh uses the Next.js 16 `proxy.ts` convention. These checks establish static/build health, not AI accuracy or database isolation. Analysis/provider contract tests and an HTTP smoke script exist; CI remains planned. See the [initial browser verification](docs/verification.md).
+The build requires network access for Google Fonts. Session refresh uses the Next.js 16 `proxy.ts` convention. These checks establish static/build health, not AI accuracy or database isolation. GitHub Actions runs lint and automated tests on pushes and pull requests. Analysis/provider contract tests and HTTP smoke scripts provide additional checks. See the [initial browser verification](docs/verification.md).
 
 ## API
 
@@ -72,13 +74,13 @@ The build requires network access for Google Fonts. Session refresh uses the Nex
 | POST | `/api/save-scan` | Save document, scan, and flags for a signed-in user |
 | POST | `/api/update-flag` | Update a saved flag's review status |
 
-The development login shortcut has been removed. Live AI routes require sign-in and database-backed reservations after migration `202610020002_ai_usage.sql` is applied. They fail closed when the usage service is unavailable. Deployment remains pending.
+The development login shortcut has been removed. Live AI routes require sign-in. Application quotas have been removed; provider limits still apply. The legacy usage migration remains in the database history but is unused. The application is deployed on Vercel.
 
 ## Analysis scope and limitations
 
 The taxonomy covers male-default cases, missing female symptom presentations, generic male pronouns, psychosomatic attribution, and missing sex-disaggregated data. Findings require educator/editor review. Grades are model-generated heuristics, not validated measures of clinical quality. Rewrites and addenda require domain review.
 
-Model-generated scan citations are withheld until independently verified evidence is available. Scans and addenda reject input over 8,000 characters rather than silently truncating. PDF extraction can merge words; exact-match highlighting can miss passages. These are tracked release blockers.
+Model-generated scan citations are withheld until independently verified evidence is available. Scans and addenda reject input over 8,000 characters rather than silently truncating. PDF extraction can merge words; exact-match highlighting can miss passages. These limitations and remaining verification gaps are tracked in the release checklist.
 
 Source text is sent to Groq. Signed-in scans attempt to store source text and results in Supabase. Use non-sensitive educational examples during prototype testing. The landing and login disclosures describe these providers; retention and deletion controls remain unfinished.
 
@@ -86,7 +88,7 @@ Source text is sent to Groq. Signed-in scans attempt to store source text and re
 
 Scanner, rewrite controls, addendum, PDF export, login UI, and dashboard queries exist. Saving is transactional, persisted flag IDs connect to review controls, and dashboard thresholds match the saved grade calculation. Database role/isolation tests pass; Google login and browser save/reopen/review persistence have been verified in one real session.
 
-V1 completes this workflow before deployment. Later work adds a reviewed benchmark and evidence retrieval. Custom model training depends on a measured comparison; see the [roadmap](ROADMAP.md).
+The deployed v1 includes this workflow. Remaining verification includes a second production account and broader accessibility coverage. Later work adds a reviewed benchmark and evidence retrieval. Custom model training depends on a measured comparison; see the [roadmap](ROADMAP.md).
 
 ## Development workflow
 

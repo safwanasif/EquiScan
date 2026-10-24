@@ -24,7 +24,8 @@ Updated October 6, 2026. Historical evidence is in verification.md; future scope
 - [ ] Actual revised-text file download verified in a regular browser.
 - [ ] Comprehensive keyboard/screen-reader and device coverage.
 - [x] Final deployment of latest polish inspected; production HTTP smoke checks passed.
-- [ ] Short demo recording and public repository decision.
+- [x] Public repository publication approved by the owner (October 23, 2026).
+- [ ] Short demo recording.
 
 ## Deliberate scope decisions
 
